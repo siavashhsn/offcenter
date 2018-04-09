@@ -1,0 +1,40 @@
+__d(function (global, _require, module, exports, _dependencyMap) {
+  'use strict';
+
+  var NavigationAnimatedView = _require(_dependencyMap[0], './NavigationAnimatedView');
+
+  var NavigationCard = _require(_dependencyMap[1], './NavigationCard');
+
+  var NavigationCardStack = _require(_dependencyMap[2], './NavigationCardStack');
+
+  var NavigationContainer = _require(_dependencyMap[3], './NavigationContainer');
+
+  var NavigationHeader = _require(_dependencyMap[4], './NavigationHeader');
+
+  var NavigationLegacyNavigator = null;
+
+  var NavigationReducer = _require(_dependencyMap[5], './NavigationReducer');
+
+  var NavigationRootContainer = _require(_dependencyMap[6], './NavigationRootContainer');
+
+  var NavigationStateUtils = _require(_dependencyMap[7], './NavigationStateUtils');
+
+  var NavigationView = _require(_dependencyMap[8], './NavigationView');
+
+  var NavigationPropTypes = _require(_dependencyMap[9], './NavigationPropTypes');
+
+  var NavigationExperimental = {
+    StateUtils: NavigationStateUtils,
+    Reducer: NavigationReducer,
+    Container: NavigationContainer,
+    RootContainer: NavigationRootContainer,
+    View: NavigationView,
+    AnimatedView: NavigationAnimatedView,
+    Card: NavigationCard,
+    CardStack: NavigationCardStack,
+    Header: NavigationHeader,
+    LegacyNavigator: NavigationLegacyNavigator,
+    PropTypes: NavigationPropTypes
+  };
+  module.exports = NavigationExperimental;
+});

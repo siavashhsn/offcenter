@@ -1,0 +1,210 @@
+__d(function (global, _require, module, exports, _dependencyMap) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _react2 = _require(_dependencyMap[0], "react");
+
+  var _react3 = _interopRequireDefault(_react2);
+
+  var _index = _require(_dependencyMap[1], "./../../node_modules/react-transform-hmr/lib/index.js");
+
+  var _index2 = _interopRequireDefault(_index);
+
+  var _jsxFileName = "/home/siavash/off-center/src/components/signUpForm.js";
+
+  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  var _reactNative = _require(_dependencyMap[2], "react-native");
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+  var _components = {
+    SignUpForm: {
+      displayName: "SignUpForm"
+    }
+  };
+
+  var _node_modulesReactTransformHmrLibIndexJs2 = (0, _index2.default)({
+    filename: "/home/siavash/off-center/src/components/signUpForm.js",
+    components: _components,
+    locals: [module],
+    imports: [_react3.default]
+  });
+
+  function _wrapComponent(id) {
+    return function (Component) {
+      return _node_modulesReactTransformHmrLibIndexJs2(Component, id);
+    };
+  }
+
+  var SignUpForm = _wrapComponent("SignUpForm")(function (_React$Component) {
+    _inherits(SignUpForm, _React$Component);
+
+    function SignUpForm() {
+      _classCallCheck(this, SignUpForm);
+
+      return _possibleConstructorReturn(this, (SignUpForm.__proto__ || Object.getPrototypeOf(SignUpForm)).apply(this, arguments));
+    }
+
+    _createClass(SignUpForm, [{
+      key: "render",
+      value: function render() {
+        var _this2 = this;
+
+        return _react3.default.createElement(
+          _reactNative.View,
+          {
+            style: styles.container,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 13
+            }
+          },
+          _react3.default.createElement(_reactNative.TextInput, {
+            style: styles.textInput,
+            placeholder: "\u0646\u0627\u0645",
+            underlineColorAndroid: 'transparent',
+            onSubmitEditing: function onSubmitEditing() {
+              return _this2.phone.focus();
+            },
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 14
+            }
+          }),
+          _react3.default.createElement(_reactNative.TextInput, {
+            style: styles.textInput,
+            placeholder: "\u0634\u0645\u0627\u0631\u0647 \u062A\u0644\u0641\u0646",
+            keyboardType: "numeric",
+            underlineColorAndroid: 'transparent',
+            onSubmitEditing: function onSubmitEditing() {
+              return _this2.email.focus();
+            },
+            ref: function ref(input) {
+              return _this2.phone = input;
+            },
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 20
+            }
+          }),
+          _react3.default.createElement(_reactNative.TextInput, {
+            style: styles.textInput,
+            placeholder: "\u0627\u06CC\u0645\u06CC\u0644",
+            keyboardType: "email-address",
+            underlineColorAndroid: 'transparent',
+            onSubmitEditing: function onSubmitEditing() {
+              return _this2.password.focus();
+            },
+            ref: function ref(input) {
+              return _this2.email = input;
+            },
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 28
+            }
+          }),
+          _react3.default.createElement(_reactNative.TextInput, {
+            style: styles.textInput,
+            placeholder: "\u0631\u0645\u0632",
+            secureTextEntry: true,
+            underlineColorAndroid: 'transparent',
+            onSubmitEditing: function onSubmitEditing() {
+              return _this2.repassword.focus();
+            },
+            ref: function ref(input) {
+              return _this2.password = input;
+            },
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 36
+            }
+          }),
+          _react3.default.createElement(_reactNative.TextInput, {
+            style: styles.textInput,
+            placeholder: "\u062A\u06A9\u0631\u0627\u0631 \u0631\u0645\u0632",
+            secureTextEntry: true,
+            underlineColorAndroid: 'transparent',
+            onSubmitEditing: function onSubmitEditing() {
+              return _this2.submit.focus();
+            },
+            ref: function ref(input) {
+              return _this2.repassword = input;
+            },
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 44
+            }
+          }),
+          _react3.default.createElement(
+            _reactNative.TouchableOpacity,
+            {
+              style: styles.button,
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 52
+              }
+            },
+            _react3.default.createElement(
+              _reactNative.Text,
+              {
+                style: styles.buttonText,
+                __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 53
+                }
+              },
+              "\u062B\u0628\u062A \u0646\u0627\u0645"
+            )
+          )
+        );
+      }
+    }]);
+
+    return SignUpForm;
+  }(_react3.default.Component));
+
+  exports.default = SignUpForm;
+
+  var styles = _reactNative.StyleSheet.create({
+    container: {
+      flexGrow: 1,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    textInput: {
+      width: 250,
+      alignSelf: 'stretch',
+      height: 55,
+      fontSize: 16,
+      marginBottom: 10,
+      backgroundColor: '#F5F5F5',
+      borderBottomColor: '#f8f8f8',
+      borderBottomWidth: 1.8,
+      borderRadius: 25,
+      paddingHorizontal: 16,
+      paddingVertical: 15
+    },
+    button: {
+      alignSelf: 'stretch',
+      height: 50,
+      backgroundColor: '#59cbbd',
+      borderRadius: 25,
+      marginVertical: 13
+    },
+    buttonText: {
+      fontSize: 18,
+      fontWeight: '500',
+      color: '#fff',
+      paddingVertical: 10,
+      textAlign: 'center'
+    }
+  });
+});

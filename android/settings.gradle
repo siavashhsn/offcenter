@@ -1,0 +1,3 @@
+rootProject.name = 'offcenter'
+
+include ':app'

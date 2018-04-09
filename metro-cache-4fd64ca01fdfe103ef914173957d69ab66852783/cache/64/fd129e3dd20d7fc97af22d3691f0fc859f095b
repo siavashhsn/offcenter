@@ -1,0 +1,16 @@
+__d(function (global, _require, module, exports, _dependencyMap) {
+  'use strict';
+
+  var NavigationFindReducer = _require(_dependencyMap[0], './NavigationFindReducer');
+
+  var NavigationStackReducer = _require(_dependencyMap[1], './NavigationStackReducer');
+
+  var NavigationTabsReducer = _require(_dependencyMap[2], './NavigationTabsReducer');
+
+  var NavigationReducer = {
+    FindReducer: NavigationFindReducer,
+    StackReducer: NavigationStackReducer,
+    TabsReducer: NavigationTabsReducer
+  };
+  module.exports = NavigationReducer;
+});

@@ -1,0 +1,25 @@
+__d(function (global, _require, module, exports, _dependencyMap) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var _jsxFileName = "/home/siavash/off-center/App.js";
+
+  var _react = _require(_dependencyMap[0], "react");
+
+  var _react2 = _interopRequireDefault(_react);
+
+  var _Routes = _require(_dependencyMap[1], "./src/Routes");
+
+  var _Routes2 = _interopRequireDefault(_Routes);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  exports.default = function () {
+    return _react2.default.createElement(_Routes2.default, {
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 5
+      }
+    });
+  };
+});

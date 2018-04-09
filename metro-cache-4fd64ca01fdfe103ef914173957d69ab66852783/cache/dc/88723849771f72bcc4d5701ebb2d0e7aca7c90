@@ -1,0 +1,67 @@
+__d(function (global, _require, module, exports, _dependencyMap) {
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var _jsxFileName = "/home/siavash/off-center/src/Routes.js";
+
+	var _react = _require(_dependencyMap[0], "react");
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactNative = _require(_dependencyMap[1], "react-native");
+
+	var _reactNativeRouterFlux = _require(_dependencyMap[2], "react-native-router-flux");
+
+	var _signIn = _require(_dependencyMap[3], "./pages/signIn");
+
+	var _signIn2 = _interopRequireDefault(_signIn);
+
+	var _signUp = _require(_dependencyMap[4], "./pages/signUp");
+
+	var _signUp2 = _interopRequireDefault(_signUp);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function () {
+		return _react2.default.createElement(
+			_reactNativeRouterFlux.Router,
+			{
+				__source: {
+					fileName: _jsxFileName,
+					lineNumber: 14
+				}
+			},
+			_react2.default.createElement(
+				_reactNativeRouterFlux.Scene,
+				{
+					key: "root",
+					hideNavBar: true,
+					__source: {
+						fileName: _jsxFileName,
+						lineNumber: 15
+					}
+				},
+				_react2.default.createElement(_reactNativeRouterFlux.Scene, {
+					key: "SignIn",
+					component: _signIn2.default,
+					title: "SignIn",
+					initial: true,
+					__source: {
+						fileName: _jsxFileName,
+						lineNumber: 16
+					}
+				}),
+				_react2.default.createElement(_reactNativeRouterFlux.Scene, {
+					key: "SignUp",
+					component: _signUp2.default,
+					title: "SignUp",
+					initial: false,
+					__source: {
+						fileName: _jsxFileName,
+						lineNumber: 22
+					}
+				})
+			)
+		);
+	};
+});
