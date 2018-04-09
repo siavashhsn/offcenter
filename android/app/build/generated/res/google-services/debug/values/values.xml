@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">1026051480274-731sj698dr1cpuomn239vu2k6omrc9ra.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://offcenterapp.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">1026051480274</string>
+    <string name="google_api_key" translatable="false">AIzaSyAChg8d9VQPTe7SriQxJfNlQAXFKW9J_To</string>
+    <string name="google_app_id" translatable="false">1:1026051480274:android:e94d61e30dcedd26</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAChg8d9VQPTe7SriQxJfNlQAXFKW9J_To</string>
+    <string name="google_storage_bucket" translatable="false">offcenterapp.appspot.com</string>
+</resources>

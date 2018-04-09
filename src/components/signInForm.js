@@ -7,8 +7,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
+
+
 export default class SignInForm extends React.Component {
-	render() {
+	
+
+  render() {
 		return(
 			<View style = {styles.container}>
         <TextInput 
@@ -20,6 +25,7 @@ export default class SignInForm extends React.Component {
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>ورود</Text>
         </TouchableOpacity>
+        
   		</View>
 		);
 	}
@@ -62,3 +68,31 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+
+/*
+_callGoogle() {
+    GoogleSignin.configure({
+    })
+    .then(() => {
+      GoogleSignin.signIn()
+      .then((user) => {
+        console.log(user);
+        this.setState({user: user});
+      })
+      .catch((err) => {
+        console.log('WRONG SIGNIN', err);
+      })
+      .done();
+    });
+  }
+
+<GoogleSigninButton
+            style={styles.button}
+            size={GoogleSigninButton.Size.Icon}
+            color={GoogleSigninButton.Color.Dark}
+            onPress={this._callGoogle.bind(this)}>
+              <Text>Sign in with google</Text>
+</GoogleSigninButton> 
+
+*/

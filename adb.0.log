@@ -78,3 +78,23 @@ adb I 04-08 17:41:49 11772 11772 adb_auth_host.cpp:174] read_key_file '/home/sia
 adb I 04-08 17:41:49 11772 11772 adb_auth_host.cpp:391] adb_auth_inotify_init...
 adb I 04-08 17:41:50 11772 11772 adb_auth_host.cpp:467] Calling send_auth_response
 adb server killed by remote request
+--- adb starting (pid 12743) ---
+adb I 04-09 18:11:22 12743 12743 main.cpp:57] Android Debug Bridge version 1.0.39
+adb I 04-09 18:11:22 12743 12743 main.cpp:57] Version 0.0.1-4500957
+adb I 04-09 18:11:22 12743 12743 main.cpp:57] Installed as /home/siavash/Documents/sdk/platform-tools/adb
+adb I 04-09 18:11:22 12743 12743 main.cpp:57] 
+adb I 04-09 18:11:22 12743 12743 adb_auth_host.cpp:416] adb_auth_init...
+adb I 04-09 18:11:22 12743 12743 adb_auth_host.cpp:174] read_key_file '/home/siavash/.android/adbkey'...
+adb I 04-09 18:11:22 12743 12743 adb_auth_host.cpp:391] adb_auth_inotify_init...
+adb I 04-09 18:11:22 12743 12743 adb_auth_host.cpp:467] Calling send_auth_response
+adb server killed by remote request
+--- adb starting (pid 13147) ---
+adb I 04-09 18:18:57 13147 13147 main.cpp:57] Android Debug Bridge version 1.0.39
+adb I 04-09 18:18:57 13147 13147 main.cpp:57] Version 0.0.1-4500957
+adb I 04-09 18:18:57 13147 13147 main.cpp:57] Installed as /home/siavash/Documents/sdk/platform-tools/adb
+adb I 04-09 18:18:57 13147 13147 main.cpp:57] 
+adb I 04-09 18:18:57 13147 13147 adb_auth_host.cpp:416] adb_auth_init...
+adb I 04-09 18:18:57 13147 13147 adb_auth_host.cpp:174] read_key_file '/home/siavash/.android/adbkey'...
+adb I 04-09 18:18:57 13147 13147 adb_auth_host.cpp:391] adb_auth_inotify_init...
+adb I 04-09 18:18:57 13147 13147 adb_auth_host.cpp:467] Calling send_auth_response
+adb server killed by remote request

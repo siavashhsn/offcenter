@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1026051480274",
+    "firebase_url": "https://offcenterapp.firebaseio.com",
+    "project_id": "offcenterapp",
+    "storage_bucket": "offcenterapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026051480274:android:e94d61e30dcedd26",
+        "android_client_info": {
+          "package_name": "com.offcenter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026051480274-731sj698dr1cpuomn239vu2k6omrc9ra.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAChg8d9VQPTe7SriQxJfNlQAXFKW9J_To"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -17,6 +17,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _reactNative = _require(_dependencyMap[2], "react-native");
 
+  var _reactNativeGoogleSignin = _require(_dependencyMap[3], "react-native-google-signin");
+
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -62,7 +64,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             style: styles.container,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 13
+              lineNumber: 18
             }
           },
           _react3.default.createElement(_reactNative.TextInput, {
@@ -72,7 +74,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             underlineColorAndroid: 'transparent',
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 14
+              lineNumber: 19
             }
           }),
           _react3.default.createElement(
@@ -81,7 +83,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               style: styles.button,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 20
+                lineNumber: 25
               }
             },
             _react3.default.createElement(
@@ -90,7 +92,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 style: styles.buttonText,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 21
+                  lineNumber: 26
                 }
               },
               "\u0648\u0631\u0648\u062F"
