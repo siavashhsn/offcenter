@@ -12,13 +12,18 @@ import SignUpForm from '../components/signUpForm';
 import { Actions } from 'react-native-router-flux';
 
 export default class SignUp extends React.Component {
-	render() {
+	
+  goBackToSignIn(){
+    Actions.pop();
+  }
+
+  render() {
 		return(
 			<View style = {styles.container}>
 				<Logo />
 				<SignUpForm />
 				<View style={styles.signInTextContainer}>
-          <TouchableOpacity onPress={ Actions.SignIn }><Text style={styles.singInText}>ورود</Text></TouchableOpacity>
+          <TouchableOpacity onPress={ this.goBackToSignIn }><Text style={styles.singInText}>ورود</Text></TouchableOpacity>
 				</View>
 			</View>
 		);

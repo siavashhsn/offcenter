@@ -7,49 +7,28 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { Actions } from 'react-native-router-flux';
+
+
 export default class SignUpForm extends React.Component {
 	render() {
 		return(
 			<View style = {styles.container}>
         <TextInput 
           style={styles.textInput}
-          placeholder="نام"
+          placeholder="نام و نام خانوادگی"
           underlineColorAndroid={'transparent'}
           onSubmitEditing={()=> this.phone.focus()}
         />
         <TextInput 
           style={styles.textInput}
-          placeholder="شماره تلفن"
+          placeholder="تلفن همراه"
           keyboardType='numeric'
           underlineColorAndroid={'transparent'}
           onSubmitEditing={()=> this.email.focus()}
           ref={(input) => this.phone = input}
-        /> 
-        <TextInput 
-          style={styles.textInput}
-          placeholder="ایمیل"
-          keyboardType='email-address'
-          underlineColorAndroid={'transparent'}
-          onSubmitEditing={()=> this.password.focus()}
-          ref={(input) => this.email = input}
-        /> 
-        <TextInput 
-          style={styles.textInput}
-          placeholder="رمز"
-          secureTextEntry = {true}
-          underlineColorAndroid={'transparent'}
-          onSubmitEditing={()=> this.repassword.focus()}
-          ref={(input) => this.password = input}
-        /> 
-        <TextInput 
-          style={styles.textInput}
-          placeholder="تکرار رمز"
-          secureTextEntry = {true}
-          underlineColorAndroid={'transparent'}
-          onSubmitEditing={()=> this.submit.focus()}
-          ref={(input) => this.repassword = input}
-        />
-        <TouchableOpacity style={styles.button}>
+        />        
+        <TouchableOpacity onPress={ Actions.Authentication } style={styles.button}>
           <Text style={styles.buttonText}>ثبت نام</Text>
         </TouchableOpacity>
   		</View>

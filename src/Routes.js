@@ -9,6 +9,8 @@ import {
 
 import SignIn from './pages/signIn';
 import SignUp from './pages/signUp';
+import Home from './pages/home';
+import Authentication from './pages/authentication';
 
 export default () => (
   <Router>
@@ -23,7 +25,16 @@ export default () => (
 				key="SignUp" 
 				component={SignUp}
 				title="SignUp"
-				initial={false}
+			/>
+			<Scene 
+				key="Home" 
+				component={Home}
+				title="Home"
+			/>
+			<Scene 
+				key="Authentication" 
+				component={Authentication}
+				title="Authentication"
 			/>
 		</Scene>
 	</Router>

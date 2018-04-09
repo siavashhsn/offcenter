@@ -20,6 +20,14 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
 	var _signUp2 = _interopRequireDefault(_signUp);
 
+	var _home = _require(_dependencyMap[5], "./pages/home");
+
+	var _home2 = _interopRequireDefault(_home);
+
+	var _authentication = _require(_dependencyMap[6], "./pages/authentication");
+
+	var _authentication2 = _interopRequireDefault(_authentication);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = function () {
@@ -28,7 +36,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 			{
 				__source: {
 					fileName: _jsxFileName,
-					lineNumber: 14
+					lineNumber: 16
 				}
 			},
 			_react2.default.createElement(
@@ -38,7 +46,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 					hideNavBar: true,
 					__source: {
 						fileName: _jsxFileName,
-						lineNumber: 15
+						lineNumber: 17
 					}
 				},
 				_react2.default.createElement(_reactNativeRouterFlux.Scene, {
@@ -48,17 +56,34 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 					initial: true,
 					__source: {
 						fileName: _jsxFileName,
-						lineNumber: 16
+						lineNumber: 18
 					}
 				}),
 				_react2.default.createElement(_reactNativeRouterFlux.Scene, {
 					key: "SignUp",
 					component: _signUp2.default,
 					title: "SignUp",
-					initial: false,
 					__source: {
 						fileName: _jsxFileName,
-						lineNumber: 22
+						lineNumber: 24
+					}
+				}),
+				_react2.default.createElement(_reactNativeRouterFlux.Scene, {
+					key: "Home",
+					component: _home2.default,
+					title: "Home",
+					__source: {
+						fileName: _jsxFileName,
+						lineNumber: 29
+					}
+				}),
+				_react2.default.createElement(_reactNativeRouterFlux.Scene, {
+					key: "Authentication",
+					component: _authentication2.default,
+					title: "Authentication",
+					__source: {
+						fileName: _jsxFileName,
+						lineNumber: 34
 					}
 				})
 			)

@@ -7,11 +7,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
+// import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
+import { Actions } from 'react-native-router-flux';
 
 
 export default class SignInForm extends React.Component {
-	
+
+  goHomePage(){
+    Actions.Authentication(); 
+  }
 
   render() {
 		return(
@@ -22,8 +26,10 @@ export default class SignInForm extends React.Component {
           keyboardType='numeric'
           underlineColorAndroid={'transparent'}
         />
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>ورود</Text>
+        <TouchableOpacity  
+          onPress={ this.goHomePage } 
+          style={styles.button}>
+            <Text style={styles.buttonText}>ورود</Text>
         </TouchableOpacity>
         
   		</View>

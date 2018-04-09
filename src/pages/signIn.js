@@ -9,8 +9,6 @@ import {
 import Logo from '../components/logo';
 import SignInForm from '../components/signInForm';
 
-
-
 import { Actions } from 'react-native-router-flux';
 
 export default class SignIn extends React.Component {
@@ -20,8 +18,9 @@ export default class SignIn extends React.Component {
 				<Logo />
 				<SignInForm />
 				<View style={styles.signUpTextContainer}>
-					<TouchableOpacity onPress={ Actions.SignUp }><Text style={styles.singUpText}>ثبت نام</Text></TouchableOpacity>
-
+					<TouchableOpacity onPress={ Actions.SignUp }>
+            <Text style={styles.singUpText}>ثبت نام</Text>
+          </TouchableOpacity>
 				</View>
 			</View>
 		);

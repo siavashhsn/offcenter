@@ -72,19 +72,19 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             style: styles.container,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 19
+              lineNumber: 17
             }
           },
           _react3.default.createElement(_logo2.default, {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 20
+              lineNumber: 18
             }
           }),
           _react3.default.createElement(_signInForm2.default, {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 21
+              lineNumber: 19
             }
           }),
           _react3.default.createElement(
@@ -93,7 +93,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               style: styles.signUpTextContainer,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 22
+                lineNumber: 20
               }
             },
             _react3.default.createElement(
@@ -102,7 +102,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 onPress: _reactNativeRouterFlux.Actions.SignUp,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 23
+                  lineNumber: 21
                 }
               },
               _react3.default.createElement(
@@ -111,7 +111,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                   style: styles.singUpText,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 23
+                    lineNumber: 22
                   }
                 },
                 "\u062B\u0628\u062A \u0646\u0627\u0645"
