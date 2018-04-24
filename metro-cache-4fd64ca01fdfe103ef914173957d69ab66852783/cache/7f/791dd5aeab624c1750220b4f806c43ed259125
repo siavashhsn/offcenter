@@ -11,11 +11,29 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _index2 = _interopRequireDefault(_index);
 
-  var _jsxFileName = "/home/siavash/off-center/src/pages/home.js";
-
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+  var _class,
+      _temp,
+      _jsxFileName = "/home/siavash/off-center/src/pages/home.js",
+      _class2,
+      _temp2;
+
   var _reactNative = _require(_dependencyMap[2], "react-native");
+
+  var _FontAwesome = _require(_dependencyMap[3], "react-native-vector-icons/FontAwesome");
+
+  var _FontAwesome2 = _interopRequireDefault(_FontAwesome);
+
+  var _Ionicons = _require(_dependencyMap[4], "react-native-vector-icons/Ionicons");
+
+  var _Ionicons2 = _interopRequireDefault(_Ionicons);
+
+  var _MaterialCommunityIcons = _require(_dependencyMap[5], "react-native-vector-icons/MaterialCommunityIcons");
+
+  var _MaterialCommunityIcons2 = _interopRequireDefault(_MaterialCommunityIcons);
+
+  var _reactNavigation = _require(_dependencyMap[6], "react-navigation");
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26,8 +44,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
   var _components = {
-    SignIn: {
-      displayName: "SignIn"
+    HomePage: {
+      displayName: "HomePage"
+    },
+    MyNotificationScreen: {
+      displayName: "MyNotificationScreen"
     }
   };
 
@@ -44,25 +65,31 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     };
   }
 
-  var SignIn = _wrapComponent("SignIn")(function (_React$Component) {
-    _inherits(SignIn, _React$Component);
+  var HomePage = _wrapComponent("HomePage")((_temp = _class = function (_Component) {
+    _inherits(HomePage, _Component);
 
-    function SignIn() {
-      _classCallCheck(this, SignIn);
+    function HomePage() {
+      _classCallCheck(this, HomePage);
 
-      return _possibleConstructorReturn(this, (SignIn.__proto__ || Object.getPrototypeOf(SignIn)).apply(this, arguments));
+      return _possibleConstructorReturn(this, (HomePage.__proto__ || Object.getPrototypeOf(HomePage)).apply(this, arguments));
     }
 
-    _createClass(SignIn, [{
+    _createClass(HomePage, [{
       key: "render",
       value: function render() {
+        var _this2 = this;
+
         return _react3.default.createElement(
           _reactNative.View,
           {
-            style: styles.container,
+            style: {
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center'
+            },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 12
+              lineNumber: 21
             }
           },
           _react3.default.createElement(
@@ -70,25 +97,109 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             {
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 13
+                lineNumber: 22
               }
             },
-            " welcome "
-          )
+            "Home page!"
+          ),
+          _react3.default.createElement(_reactNative.Button, {
+            onPress: function onPress() {
+              return _this2.props.navigation.navigate('DrawerOpen');
+            },
+            title: "DrawerOpen",
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 23
+            }
+          })
         );
       }
     }]);
 
-    return SignIn;
-  }(_react3.default.Component));
+    return HomePage;
+  }(_react2.Component), _class.navigationOption = {
+    drawerlable: 'Home'
+  }, _temp));
 
-  exports.default = SignIn;
+  var MyNotificationScreen = _wrapComponent("MyNotificationScreen")((_temp2 = _class2 = function (_Component2) {
+    _inherits(MyNotificationScreen, _Component2);
 
-  var styles = _reactNative.StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center'
+    function MyNotificationScreen() {
+      _classCallCheck(this, MyNotificationScreen);
+
+      return _possibleConstructorReturn(this, (MyNotificationScreen.__proto__ || Object.getPrototypeOf(MyNotificationScreen)).apply(this, arguments));
     }
+
+    _createClass(MyNotificationScreen, [{
+      key: "render",
+      value: function render() {
+        var _this4 = this;
+
+        return _react3.default.createElement(
+          _reactNative.View,
+          {
+            style: {
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center'
+            },
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 40
+            }
+          },
+          _react3.default.createElement(
+            _reactNative.Text,
+            {
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 41
+              }
+            },
+            "notification!"
+          ),
+          _react3.default.createElement(_reactNative.Button, {
+            onPress: function onPress() {
+              return _this4.props.navigation.goBack();
+            },
+            title: "go back to home page",
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 42
+            }
+          }),
+          _react3.default.createElement(_reactNative.Button, {
+            onPress: function onPress() {
+              return _this4.props.navigation.navigate('DrawerOpen');
+            },
+            title: "DrawerOpen",
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 46
+            }
+          })
+        );
+      }
+    }]);
+
+    return MyNotificationScreen;
+  }(_react2.Component), _class2.navigationOption = {
+    drawerlable: 'Notification'
+  }, _temp2));
+
+  var styles = _reactNative.StyleSheet.create({});
+
+  exports.default = (0, _reactNavigation.DrawerNavigator)({
+    Home: {
+      screen: HomePage
+    },
+    Notification: {
+      screen: MyNotificationScreen
+    }
+  }, {
+    DrawerPosition: 'Right',
+    initialRouteName: 'Home',
+    drawerBackGroundColor: 'gray',
+    drawerWidth: 200
   });
 });

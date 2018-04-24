@@ -5,7 +5,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _react2 = _require(_dependencyMap[0], "react");
 
-  var React = _interopRequireWildcard(_react2);
+  var _react3 = _interopRequireDefault(_react2);
 
   var _index = _require(_dependencyMap[1], "./../../../../react-transform-hmr/lib/index.js");
 
@@ -39,17 +39,25 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _addNavigationHelpers2 = _interopRequireDefault(_addNavigationHelpers);
 
-  var _SceneView = _require(_dependencyMap[8], "../SceneView");
+  var _getChildEventSubscriber = _require(_dependencyMap[8], "../../getChildEventSubscriber");
+
+  var _getChildEventSubscriber2 = _interopRequireDefault(_getChildEventSubscriber);
+
+  var _SceneView = _require(_dependencyMap[9], "../SceneView");
 
   var _SceneView2 = _interopRequireDefault(_SceneView);
 
-  var _TransitionConfigs = _require(_dependencyMap[9], "./TransitionConfigs");
+  var _TransitionConfigs = _require(_dependencyMap[10], "./TransitionConfigs");
 
   var _TransitionConfigs2 = _interopRequireDefault(_TransitionConfigs);
 
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  var _ReactNativeFeatures = _require(_dependencyMap[11], "../../utils/ReactNativeFeatures");
+
+  var ReactNativeFeatures = _interopRequireWildcard(_ReactNativeFeatures);
 
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
@@ -69,7 +77,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     filename: "/home/siavash/off-center/node_modules/react-navigation/src/views/CardStack/CardStack.js",
     components: _components,
     locals: [module],
-    imports: [React.default]
+    imports: [_react3.default]
   });
 
   function _wrapComponent(id) {
@@ -79,6 +87,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   var emptyFunction = function emptyFunction() {};
+
+  var EaseInOut = _reactNative.Easing.inOut(_reactNative.Easing.ease);
 
   var ANIMATION_DURATION = 500;
   var POSITION_THRESHOLD = 1 / 2;
@@ -110,17 +120,29 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         args[_key] = arguments[_key];
       }
 
-      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CardStack.__proto__ || Object.getPrototypeOf(CardStack)).call.apply(_ref, [this].concat(args))), _this), _this._gestureStartValue = 0, _this._isResponding = false, _this._immediateIndex = null, _this._screenDetails = {}, _this._getScreenDetails = function (scene) {
+      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = CardStack.__proto__ || Object.getPrototypeOf(CardStack)).call.apply(_ref, [this].concat(args))), _this), _this._gestureStartValue = 0, _this._isResponding = false, _this._immediateIndex = null, _this._screenDetails = {}, _this._childEventSubscribers = {}, _this._isRouteFocused = function (route) {
+        var state = _this.props.transitionProps.navigation.state;
+        var focusedRoute = state.routes[state.index];
+        return route === focusedRoute;
+      }, _this._getScreenDetails = function (scene) {
         var _this$props = _this.props,
             screenProps = _this$props.screenProps,
-            navigation = _this$props.navigation,
+            navigation = _this$props.transitionProps.navigation,
             router = _this$props.router;
         var screenDetails = _this._screenDetails[scene.key];
 
         if (!screenDetails || screenDetails.state !== scene.route) {
+          if (!_this._childEventSubscribers[scene.route.key]) {
+            _this._childEventSubscribers[scene.route.key] = (0, _getChildEventSubscriber2.default)(navigation.addListener, scene.route.key);
+          }
+
           var screenNavigation = (0, _addNavigationHelpers2.default)({
             dispatch: navigation.dispatch,
-            state: scene.route
+            state: scene.route,
+            isFocused: function isFocused() {
+              return _this._isRouteFocused(scene.route);
+            },
+            addListener: _this._childEventSubscribers[scene.route.key]
           });
           screenDetails = {
             state: scene.route,
@@ -133,26 +155,30 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         return screenDetails;
       }, _this._getTransitionConfig = function () {
         var isModal = _this.props.mode === 'modal';
-        return _TransitionConfigs2.default.getTransitionConfig(_this.props.transitionConfig, {}, {}, isModal);
+        return _TransitionConfigs2.default.getTransitionConfig(_this.props.transitionConfig, _this.props.transitionProps, _this.props.prevTransitionProps, isModal);
       }, _this._renderCard = function (scene) {
         var _this$_getTransitionC = _this._getTransitionConfig(),
             screenInterpolator = _this$_getTransitionC.screenInterpolator;
 
-        var style = screenInterpolator && screenInterpolator(_extends({}, _this.props, {
+        var style = screenInterpolator && screenInterpolator(_extends({}, _this.props.transitionProps, {
           scene: scene
         }));
 
         var SceneComponent = _this.props.router.getComponentForRouteName(scene.route.routeName);
 
-        return React.createElement(
+        var _this$props2 = _this.props,
+            transitionProps = _this$props2.transitionProps,
+            props = _objectWithoutProperties(_this$props2, ["transitionProps"]);
+
+        return _react3.default.createElement(
           _Card2.default,
-          _extends({}, _this.props, {
+          _extends({}, props, transitionProps, {
             key: "card_" + scene.key,
             style: [style, _this.props.cardStyle],
             scene: scene,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 454
+              lineNumber: 498
             }
           }),
           _this._renderInnerScene(SceneComponent, scene)
@@ -169,9 +195,23 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           this._screenDetails = {};
         }
 
-        props.scenes.forEach(function (newScene) {
+        props.transitionProps.scenes.forEach(function (newScene) {
           if (_this2._screenDetails[newScene.key] && _this2._screenDetails[newScene.key].state !== newScene.route) {
             _this2._screenDetails[newScene.key] = null;
+          }
+        });
+      }
+    }, {
+      key: "componentDidUpdate",
+      value: function componentDidUpdate() {
+        var _this3 = this;
+
+        var activeKeys = this.props.transitionProps.navigation.state.routes.map(function (route) {
+          return route.key;
+        });
+        Object.keys(this._childEventSubscribers).forEach(function (key) {
+          if (!activeKeys.includes(key)) {
+            delete _this3._childEventSubscribers[key];
           }
         });
       }
@@ -185,10 +225,10 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         }
 
         var renderHeader = header || function (props) {
-          return React.createElement(_Header2.default, _extends({}, props, {
+          return _react3.default.createElement(_Header2.default, _extends({}, props, {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 165
+              lineNumber: 152
             }
           }));
         };
@@ -200,11 +240,14 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
         var _props = this.props,
             mode = _props.mode,
-            passProps = _objectWithoutProperties(_props, ["mode"]);
+            transitionProps = _props.transitionProps,
+            prevTransitionProps = _props.prevTransitionProps,
+            passProps = _objectWithoutProperties(_props, ["mode", "transitionProps", "prevTransitionProps"]);
 
-        return renderHeader(_extends({}, passProps, {
+        return renderHeader(_extends({}, passProps, transitionProps, {
           scene: scene,
           mode: headerMode,
+          transitionPreset: this._getHeaderTransitionPreset(),
           getScreenDetails: this._getScreenDetails,
           leftInterpolator: headerLeftInterpolator,
           titleInterpolator: headerTitleInterpolator,
@@ -214,70 +257,94 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }, {
       key: "_animatedSubscribe",
       value: function _animatedSubscribe(props) {
-        animatedSubscribeValue(props.layout.width);
-        animatedSubscribeValue(props.layout.height);
-        animatedSubscribeValue(props.position);
+        animatedSubscribeValue(props.transitionProps.layout.width);
+        animatedSubscribeValue(props.transitionProps.layout.height);
+        animatedSubscribeValue(props.transitionProps.position);
       }
     }, {
       key: "_reset",
       value: function _reset(resetToIndex, duration) {
-        _reactNative.Animated.timing(this.props.position, {
-          toValue: resetToIndex,
-          duration: duration,
-          easing: _reactNative.Easing.linear(),
-          useNativeDriver: this.props.position.__isNative
-        }).start();
+        if (_reactNative.Platform.OS === 'ios' && ReactNativeFeatures.supportsImprovedSpringAnimation()) {
+          _reactNative.Animated.spring(this.props.transitionProps.position, {
+            toValue: resetToIndex,
+            stiffness: 5000,
+            damping: 600,
+            mass: 3,
+            useNativeDriver: this.props.transitionProps.position.__isNative
+          }).start();
+        } else {
+          _reactNative.Animated.timing(this.props.transitionProps.position, {
+            toValue: resetToIndex,
+            duration: duration,
+            easing: EaseInOut,
+            useNativeDriver: this.props.transitionProps.position.__isNative
+          }).start();
+        }
       }
     }, {
       key: "_goBack",
       value: function _goBack(backFromIndex, duration) {
-        var _this3 = this;
+        var _this4 = this;
 
-        var _props2 = this.props,
-            navigation = _props2.navigation,
-            position = _props2.position,
-            scenes = _props2.scenes;
+        var _props$transitionProp = this.props.transitionProps,
+            navigation = _props$transitionProp.navigation,
+            position = _props$transitionProp.position,
+            scenes = _props$transitionProp.scenes;
         var toValue = Math.max(backFromIndex - 1, 0);
         this._immediateIndex = toValue;
 
-        _reactNative.Animated.timing(position, {
-          toValue: toValue,
-          duration: duration,
-          easing: _reactNative.Easing.linear(),
-          useNativeDriver: position.__isNative
-        }).start(function () {
-          _this3._immediateIndex = null;
+        var onCompleteAnimation = function onCompleteAnimation() {
+          _this4._immediateIndex = null;
           var backFromScene = scenes.find(function (s) {
             return s.index === toValue + 1;
           });
 
-          if (!_this3._isResponding && backFromScene) {
+          if (!_this4._isResponding && backFromScene) {
             navigation.dispatch(_NavigationActions2.default.back({
-              key: backFromScene.route.key
+              key: backFromScene.route.key,
+              immediate: true
             }));
           }
-        });
+        };
+
+        if (_reactNative.Platform.OS === 'ios' && ReactNativeFeatures.supportsImprovedSpringAnimation()) {
+          _reactNative.Animated.spring(position, {
+            toValue: toValue,
+            stiffness: 5000,
+            damping: 600,
+            mass: 3,
+            useNativeDriver: position.__isNative
+          }).start(onCompleteAnimation);
+        } else {
+          _reactNative.Animated.timing(position, {
+            toValue: toValue,
+            duration: duration,
+            easing: EaseInOut,
+            useNativeDriver: position.__isNative
+          }).start(onCompleteAnimation);
+        }
       }
     }, {
       key: "render",
       value: function render() {
-        var _this4 = this;
+        var _this5 = this;
 
         var floatingHeader = null;
 
         var headerMode = this._getHeaderMode();
 
         if (headerMode === 'float') {
-          floatingHeader = this._renderHeader(this.props.scene, headerMode);
+          floatingHeader = this._renderHeader(this.props.transitionProps.scene, headerMode);
         }
 
-        var _props3 = this.props,
-            navigation = _props3.navigation,
-            position = _props3.position,
-            layout = _props3.layout,
-            scene = _props3.scene,
-            scenes = _props3.scenes,
-            mode = _props3.mode;
+        var _props2 = this.props,
+            _props2$transitionPro = _props2.transitionProps,
+            navigation = _props2$transitionPro.navigation,
+            position = _props2$transitionPro.position,
+            layout = _props2$transitionPro.layout,
+            scene = _props2$transitionPro.scene,
+            scenes = _props2$transitionPro.scenes,
+            mode = _props2.mode;
         var index = navigation.state.index;
         var isVertical = mode === 'modal';
 
@@ -285,17 +352,17 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             options = _getScreenDetails.options;
 
         var gestureDirectionInverted = options.gestureDirection === 'inverted';
-
-        var responder = _reactNative.PanResponder.create({
+        var gesturesEnabled = typeof options.gesturesEnabled === 'boolean' ? options.gesturesEnabled : _reactNative.Platform.OS === 'ios';
+        var responder = !gesturesEnabled ? null : _reactNative.PanResponder.create({
           onPanResponderTerminate: function onPanResponderTerminate() {
-            _this4._isResponding = false;
+            _this5._isResponding = false;
 
-            _this4._reset(index, 0);
+            _this5._reset(index, 0);
           },
           onPanResponderGrant: function onPanResponderGrant() {
             position.stopAnimation(function (value) {
-              _this4._isResponding = true;
-              _this4._gestureStartValue = value;
+              _this5._isResponding = true;
+              _this5._gestureStartValue = value;
             });
           },
           onMoveShouldSetPanResponder: function onMoveShouldSetPanResponder(event, gesture) {
@@ -303,14 +370,14 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               return false;
             }
 
-            var immediateIndex = _this4._immediateIndex == null ? index : _this4._immediateIndex;
+            var immediateIndex = _this5._immediateIndex == null ? index : _this5._immediateIndex;
             var currentDragDistance = gesture[isVertical ? 'dy' : 'dx'];
             var currentDragPosition = event.nativeEvent[isVertical ? 'pageY' : 'pageX'];
             var axisLength = isVertical ? layout.height.__getValue() : layout.width.__getValue();
             var axisHasBeenMeasured = !!axisLength;
             var screenEdgeDistance = gestureDirectionInverted ? axisLength - (currentDragPosition - currentDragDistance) : currentDragPosition - currentDragDistance;
 
-            var _getScreenDetails$opt = _this4._getScreenDetails(scene).options.gestureResponseDistance,
+            var _getScreenDetails$opt = _this5._getScreenDetails(scene).options.gestureResponseDistance,
                 userGestureResponseDistance = _getScreenDetails$opt === undefined ? {} : _getScreenDetails$opt;
 
             var gestureResponseDistance = isVertical ? userGestureResponseDistance.vertical || GESTURE_RESPONSE_DISTANCE_VERTICAL : userGestureResponseDistance.horizontal || GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
@@ -325,7 +392,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             return shouldSetResponder;
           },
           onPanResponderMove: function onPanResponderMove(event, gesture) {
-            var startValue = _this4._gestureStartValue;
+            var startValue = _this5._gestureStartValue;
             var axis = isVertical ? 'dy' : 'dx';
             var axisDistance = isVertical ? layout.height.__getValue() : layout.width.__getValue();
             var currentValue = (_reactNative.I18nManager.isRTL && axis === 'dx') !== gestureDirectionInverted ? startValue + gesture[axis] / axisDistance : startValue - gesture[axis] / axisDistance;
@@ -336,12 +403,12 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             return false;
           },
           onPanResponderRelease: function onPanResponderRelease(event, gesture) {
-            if (!_this4._isResponding) {
+            if (!_this5._isResponding) {
               return;
             }
 
-            _this4._isResponding = false;
-            var immediateIndex = _this4._immediateIndex == null ? index : _this4._immediateIndex;
+            _this5._isResponding = false;
+            var immediateIndex = _this5._immediateIndex == null ? index : _this5._immediateIndex;
             var axisDistance = isVertical ? layout.height.__getValue() : layout.width.__getValue();
             var movementDirection = gestureDirectionInverted ? -1 : 1;
             var movedDistance = movementDirection * gesture[isVertical ? 'dy' : 'dx'];
@@ -352,49 +419,47 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             var goBackDuration = gestureDirectionInverted ? movedDistance / velocity : (axisDistance - movedDistance) / velocity;
             position.stopAnimation(function (value) {
               if (gestureVelocity < -0.5) {
-                _this4._reset(immediateIndex, resetDuration);
+                _this5._reset(immediateIndex, resetDuration);
 
                 return;
               }
 
               if (gestureVelocity > 0.5) {
-                _this4._goBack(immediateIndex, goBackDuration);
+                _this5._goBack(immediateIndex, goBackDuration);
 
                 return;
               }
 
               if (value <= index - POSITION_THRESHOLD) {
-                _this4._goBack(immediateIndex, goBackDuration);
+                _this5._goBack(immediateIndex, goBackDuration);
               } else {
-                _this4._reset(immediateIndex, resetDuration);
+                _this5._reset(immediateIndex, resetDuration);
               }
             });
           }
         });
-
-        var gesturesEnabled = typeof options.gesturesEnabled === 'boolean' ? options.gesturesEnabled : _reactNative.Platform.OS === 'ios';
         var handlers = gesturesEnabled ? responder.panHandlers : {};
         var containerStyle = [styles.container, this._getTransitionConfig().containerStyle];
-        return React.createElement(
+        return _react3.default.createElement(
           _reactNative.View,
           _extends({}, handlers, {
             style: containerStyle,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 382
+              lineNumber: 413
             }
           }),
-          React.createElement(
+          _react3.default.createElement(
             _reactNative.View,
             {
               style: styles.scenes,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 383
+                lineNumber: 414
               }
             },
             scenes.map(function (s) {
-              return _this4._renderCard(s);
+              return _this5._renderCard(s);
             })
           ),
           floatingHeader
@@ -414,6 +479,19 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         return 'float';
       }
     }, {
+      key: "_getHeaderTransitionPreset",
+      value: function _getHeaderTransitionPreset() {
+        if (_reactNative.Platform.OS === 'android' || this._getHeaderMode() === 'screen') {
+          return 'fade-in-place';
+        }
+
+        if (this.props.headerTransitionPreset) {
+          return this.props.headerTransitionPreset;
+        } else {
+          return 'fade-in-place';
+        }
+      }
+    }, {
       key: "_renderInnerScene",
       value: function _renderInnerScene(SceneComponent, scene) {
         var _getScreenDetails2 = this._getScreenDetails(scene),
@@ -424,16 +502,16 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         var headerMode = this._getHeaderMode();
 
         if (headerMode === 'screen') {
-          return React.createElement(
+          return _react3.default.createElement(
             _reactNative.View,
             {
               style: styles.container,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 410
+                lineNumber: 453
               }
             },
-            React.createElement(
+            _react3.default.createElement(
               _reactNative.View,
               {
                 style: {
@@ -441,16 +519,16 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 },
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 411
+                  lineNumber: 454
                 }
               },
-              React.createElement(_SceneView2.default, {
+              _react3.default.createElement(_SceneView2.default, {
                 screenProps: screenProps,
                 navigation: navigation,
                 component: SceneComponent,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 412
+                  lineNumber: 455
                 }
               })
             ),
@@ -458,20 +536,20 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           );
         }
 
-        return React.createElement(_SceneView2.default, {
+        return _react3.default.createElement(_SceneView2.default, {
           screenProps: this.props.screenProps,
           navigation: navigation,
           component: SceneComponent,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 423
+            lineNumber: 466
           }
         });
       }
     }]);
 
     return CardStack;
-  }(React.Component));
+  }(_react3.default.Component));
 
   var styles = _reactNative.StyleSheet.create({
     container: {

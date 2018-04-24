@@ -11,21 +11,16 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _index2 = _interopRequireDefault(_index);
 
-  var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
   var _class,
       _temp,
+      _initialiseProps,
       _jsxFileName = "/home/siavash/off-center/node_modules/react-native-tab-view/src/TabViewPagerScroll.js";
 
-  var _propTypes = _require(_dependencyMap[2], "prop-types");
+  var _reactNative = _require(_dependencyMap[2], "react-native");
 
-  var _propTypes2 = _interopRequireDefault(_propTypes);
-
-  var _reactNative = _require(_dependencyMap[3], "react-native");
-
-  var _TabViewPropTypes = _require(_dependencyMap[4], "./TabViewPropTypes");
+  var _TabViewPropTypes = _require(_dependencyMap[3], "./TabViewPropTypes");
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -64,41 +59,14 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
       var _this = _possibleConstructorReturn(this, (TabViewPagerScroll.__proto__ || Object.getPrototypeOf(TabViewPagerScroll)).call(this, props));
 
-      _this._nextOffset = 0;
-      _this._isIdle = true;
+      _initialiseProps.call(_this);
 
-      _this._scrollTo = function (x) {
-        var animated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _this.props.animationEnabled !== false;
-        _this._nextOffset = x;
-
-        if (_this._isIdle && _this._scrollView) {
-          _this._scrollView.scrollTo({
-            x: x,
-            animated: animated
-          });
-        }
-      };
-
-      _this._handleMomentumScrollEnd = function (e) {
-        var nextIndex = Math.round(e.nativeEvent.contentOffset.x / _this.props.layout.width);
-        _this._isIdle = true;
-
-        _this.props.jumpToIndex(nextIndex);
-      };
-
-      _this._handleScroll = function (e) {
-        _this._isIdle = Math.abs(e.nativeEvent.contentOffset.x - _this._nextOffset) < 0.1;
-
-        _this.props.position.setValue(e.nativeEvent.contentOffset.x / _this.props.layout.width);
-      };
-
-      _this._setRef = function (el) {
-        return _this._scrollView = el;
-      };
-
+      var _this$props = _this.props,
+          navigationState = _this$props.navigationState,
+          layout = _this$props.layout;
       _this.state = {
         initialOffset: {
-          x: _this.props.navigationState.index * _this.props.layout.width,
+          x: navigationState.index * layout.width,
           y: 0
         }
       };
@@ -108,35 +76,20 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     _createClass(TabViewPagerScroll, [{
       key: "componentDidMount",
       value: function componentDidMount() {
-        this._scrollTo(this.props.navigationState.index * this.props.layout.width, false);
-
-        this._resetListener = this.props.subscribe('reset', this._scrollTo);
+        this._setInitialPage();
       }
     }, {
       key: "componentDidUpdate",
       value: function componentDidUpdate(prevProps) {
-        var _this2 = this;
-
-        var amount = this.props.navigationState.index * this.props.layout.width;
-
-        if (prevProps.navigationState !== this.props.navigationState || prevProps.layout !== this.props.layout) {
-          if (_reactNative.Platform.OS === 'android' || prevProps.navigationState !== this.props.navigationState) {
-            global.requestAnimationFrame(function () {
-              return _this2._scrollTo(amount);
-            });
-          } else {
-            this._scrollTo(amount, false);
-          }
+        if (prevProps.layout.width !== this.props.layout.width || prevProps.navigationState !== this.props.navigationState) {
+          this._scrollTo(this.props.navigationState.index * this.props.layout.width, prevProps.layout.width === this.props.layout.width);
         }
-      }
-    }, {
-      key: "componentWillUnmount",
-      value: function componentWillUnmount() {
-        this._resetListener.remove();
       }
     }, {
       key: "render",
       value: function render() {
+        var _this2 = this;
+
         var _props = this.props,
             children = _props.children,
             layout = _props.layout,
@@ -149,22 +102,25 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             directionalLockEnabled: true,
             keyboardDismissMode: "on-drag",
             keyboardShouldPersistTaps: "always",
+            overScrollMode: "never",
             scrollEnabled: this.props.swipeEnabled,
             automaticallyAdjustContentInsets: false,
             bounces: false,
             alwaysBounceHorizontal: false,
             scrollsToTop: false,
             showsHorizontalScrollIndicator: false,
-            scrollEventThrottle: 16,
+            scrollEventThrottle: 1,
             onScroll: this._handleScroll,
             onMomentumScrollEnd: this._handleMomentumScrollEnd,
             contentOffset: this.state.initialOffset,
             style: styles.container,
             contentContainerStyle: layout.width ? null : styles.container,
-            ref: this._setRef,
+            ref: function ref(el) {
+              return _this2._scrollView = el;
+            },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 117
+              lineNumber: 128
             }
           },
           React.Children.map(children, function (child, i) {
@@ -179,7 +135,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 } : i === navigationState.index ? styles.page : null,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 138
+                  lineNumber: 150
                 }
               },
               i === navigationState.index || layout.width ? child : null
@@ -190,17 +146,76 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }]);
 
     return TabViewPagerScroll;
-  }(React.Component), _class.propTypes = _extends({}, _TabViewPropTypes.SceneRendererPropType, {
-    animationEnabled: _propTypes2.default.bool,
-    swipeEnabled: _propTypes2.default.bool,
-    children: _propTypes2.default.node
-  }), _temp));
+  }(React.Component), _class.propTypes = _TabViewPropTypes.PagerRendererPropType, _class.defaultProps = {
+    canJumpToTab: function canJumpToTab() {
+      return true;
+    }
+  }, _initialiseProps = function _initialiseProps() {
+    var _this3 = this;
+
+    this._isIdle = true;
+    this._isInitial = true;
+
+    this._setInitialPage = function () {
+      if (_this3.props.layout.width) {
+        _this3._isInitial = true;
+
+        _this3._scrollTo(_this3.props.navigationState.index * _this3.props.layout.width, false);
+      }
+
+      setTimeout(function () {
+        _this3._isInitial = false;
+      }, 50);
+    };
+
+    this._scrollTo = function (x, animated) {
+      if (_this3._isIdle && _this3._scrollView) {
+        _this3._scrollView.scrollTo({
+          x: x,
+          animated: animated && _this3.props.animationEnabled !== false
+        });
+      }
+    };
+
+    this._handleMomentumScrollEnd = function (e) {
+      var nextIndex = Math.round(e.nativeEvent.contentOffset.x / _this3.props.layout.width);
+
+      if (_this3.props.canJumpToTab(_this3.props.navigationState.routes[nextIndex])) {
+        _this3.props.jumpToIndex(nextIndex);
+      } else {
+        global.requestAnimationFrame(function () {
+          _this3._scrollTo(_this3.props.navigationState.index * _this3.props.layout.width);
+        });
+      }
+    };
+
+    this._handleScroll = function (e) {
+      if (_this3._isInitial) {
+        return;
+      }
+
+      var _props2 = _this3.props,
+          navigationState = _props2.navigationState,
+          layout = _props2.layout;
+      var offset = navigationState.index * layout.width;
+
+      _this3.props.offsetX.setValue(-offset);
+
+      _this3.props.panX.setValue(offset - e.nativeEvent.contentOffset.x);
+
+      global.cancelAnimationFrame(_this3._idleCallback);
+      _this3._isIdle = false;
+      _this3._idleCallback = global.requestAnimationFrame(function () {
+        _this3._isIdle = true;
+      });
+    };
+  }, _temp));
 
   exports.default = TabViewPagerScroll;
 
   var styles = _reactNative.StyleSheet.create({
     container: {
-      flexGrow: 1
+      flex: 1
     },
     page: {
       flex: 1,

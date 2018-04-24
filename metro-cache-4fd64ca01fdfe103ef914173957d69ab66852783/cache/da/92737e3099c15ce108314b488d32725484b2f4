@@ -31,8 +31,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
   function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -81,34 +79,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         args[_key] = arguments[_key];
       }
 
-      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = TabViewPagerPan.__proto__ || Object.getPrototypeOf(TabViewPagerPan)).call.apply(_ref, [this].concat(args))), _this), _this._pendingIndex = null, _this._lastValue = null, _this._isMoving = null, _this._startDirection = 0, _this._isIndexInRange = function (index) {
-        var routes = _this.props.navigationState.routes;
-        return index >= 0 && index <= routes.length - 1;
-      }, _this._isMovingHorizontally = function (evt, gestureState) {
-        return Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 3) && Math.abs(gestureState.vx) > Math.abs(gestureState.vy * 3);
-      }, _this._isReverseDirection = function (gestureState) {
-        if (_this._startDirection > 0) {
-          return gestureState.vx < 0;
-        } else {
-          return gestureState.vx > 0;
-        }
-      }, _this._getNextIndex = function (evt, gestureState) {
-        var currentIndex = typeof _this._pendingIndex === 'number' ? _this._pendingIndex : _this.props.navigationState.index;
-        var swipeVelocityThreshold = _this.props.swipeVelocityThreshold;
-
-        if (_reactNative.Platform.OS === 'android') {
-          swipeVelocityThreshold /= 1000000;
-        }
-
-        if (Math.abs(gestureState.dx) > _this.props.swipeDistanceThreshold || Math.abs(gestureState.vx) > swipeVelocityThreshold) {
-          var nextIndex = currentIndex - gestureState.dx / Math.abs(gestureState.dx) * (_reactNative.I18nManager.isRTL ? -1 : 1);
-
-          if (_this._isIndexInRange(nextIndex)) {
-            return nextIndex;
-          }
-        }
-
-        return currentIndex;
+      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = TabViewPagerPan.__proto__ || Object.getPrototypeOf(TabViewPagerPan)).call.apply(_ref, [this].concat(args))), _this), _this._isMovingHorizontally = function (evt, gestureState) {
+        return Math.abs(gestureState.dx) > Math.abs(gestureState.dy * 2) && Math.abs(gestureState.vx) > Math.abs(gestureState.vy * 2);
       }, _this._canMoveScreen = function (evt, gestureState) {
         if (_this.props.swipeEnabled === false) {
           return false;
@@ -117,89 +89,77 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         var _this$props$navigatio = _this.props.navigationState,
             routes = _this$props$navigatio.routes,
             index = _this$props$navigatio.index;
-        var canMove = _this._isMovingHorizontally(evt, gestureState) && (gestureState.dx >= DEAD_ZONE && index >= 0 || gestureState.dx <= -DEAD_ZONE && index <= routes.length - 1);
-
-        if (canMove) {
-          _this._startDirection = gestureState.dx;
-        }
-
-        return canMove;
+        return _this._isMovingHorizontally(evt, gestureState) && (gestureState.dx >= DEAD_ZONE && index >= 0 || gestureState.dx <= -DEAD_ZONE && index <= routes.length - 1);
       }, _this._startGesture = function (evt, gestureState) {
         if (typeof _this.props.onSwipeStart === 'function') {
           _this.props.onSwipeStart(evt, gestureState);
         }
 
-        _this._lastValue = _this.props.getLastPosition();
-
-        _this.props.position.stopAnimation();
+        _this.props.panX.stopAnimation();
       }, _this._respondToGesture = function (evt, gestureState) {
-        var width = _this.props.layout.width;
-        var currentPosition = typeof _this._lastValue === 'number' ? _this._lastValue : _this.props.navigationState.index;
-        var nextPosition = currentPosition - gestureState.dx / width * (_reactNative.I18nManager.isRTL ? -1 : 1);
+        var _this$props$navigatio2 = _this.props.navigationState,
+            routes = _this$props$navigatio2.routes,
+            index = _this$props$navigatio2.index;
 
-        if (_this._isMoving === null) {
-          _this._isMoving = _this._isMovingHorizontally(evt, gestureState);
+        if (gestureState.dx > 0 && index <= 0 || gestureState.dx < 0 && index >= routes.length - 1) {
+          return;
         }
 
-        if (_this._isMoving && _this._isIndexInRange(nextPosition)) {
-          _this.props.position.setValue(nextPosition);
-        }
+        _this.props.panX.setValue(gestureState.dx);
       }, _this._finishGesture = function (evt, gestureState) {
-        if (typeof _this.props.onSwipeEnd === 'function') {
-          _this.props.onSwipeEnd(evt, gestureState);
+        var _this$props = _this.props,
+            navigationState = _this$props.navigationState,
+            layout = _this$props.layout,
+            _this$props$swipeDist = _this$props.swipeDistanceThreshold,
+            swipeDistanceThreshold = _this$props$swipeDist === undefined ? layout.width / 1.75 : _this$props$swipeDist;
+        var _this$props$swipeVelo = _this.props.swipeVelocityThreshold,
+            swipeVelocityThreshold = _this$props$swipeVelo === undefined ? 0.15 : _this$props$swipeVelo;
+
+        if (_reactNative.Platform.OS === 'android') {
+          swipeVelocityThreshold /= 1000000;
         }
 
-        var currentIndex = _this.props.navigationState.index;
+        var currentIndex = typeof _this._pendingIndex === 'number' ? _this._pendingIndex : navigationState.index;
+        var nextIndex = currentIndex;
 
-        var currentValue = _this.props.getLastPosition();
+        if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy) && Math.abs(gestureState.vx) > Math.abs(gestureState.vy) && (Math.abs(gestureState.dx) > swipeDistanceThreshold || Math.abs(gestureState.vx) > swipeVelocityThreshold)) {
+          nextIndex = Math.round(Math.min(Math.max(0, currentIndex - gestureState.dx / Math.abs(gestureState.dx)), navigationState.routes.length - 1));
+        }
 
-        if (currentValue !== currentIndex) {
-          if (_this._isMoving && !_this._isReverseDirection(gestureState)) {
-            var nextIndex = _this._getNextIndex(evt, gestureState);
+        if (!isFinite(nextIndex) || !_this.props.canJumpToTab(_this.props.navigationState.routes[nextIndex])) {
+          nextIndex = currentIndex;
+        }
 
-            _this._transitionTo(nextIndex);
-          } else {
-            _this._transitionTo(currentIndex);
+        _this._transitionTo(nextIndex);
+      }, _this._transitionTo = function (index) {
+        var offset = -index * _this.props.layout.width;
+
+        if (_this.props.animationEnabled === false) {
+          _this.props.panX.setValue(0);
+
+          _this.props.offsetX.setValue(offset);
+
+          return;
+        }
+
+        var timing = DefaultTransitionSpec.timing,
+            transitionConfig = _objectWithoutProperties(DefaultTransitionSpec, ["timing"]);
+
+        _reactNative.Animated.parallel([timing(_this.props.panX, _extends({}, transitionConfig, {
+          toValue: 0
+        })), timing(_this.props.offsetX, _extends({}, transitionConfig, {
+          toValue: offset
+        }))]).start(function (_ref2) {
+          var finished = _ref2.finished;
+
+          if (finished) {
+            _this.props.jumpToIndex(index);
+
+            _this._pendingIndex = null;
           }
-        }
+        });
 
-        _this._lastValue = null;
-        _this._isMoving = null;
-      }, _this._transitionTo = function (toValue) {
-        var lastPosition = _this.props.getLastPosition();
-
-        var currentTransitionProps = {
-          progress: lastPosition
-        };
-        var nextTransitionProps = {
-          progress: toValue
-        };
-        _this._pendingIndex = toValue;
-
-        if (_this.props.animationEnabled !== false) {
-          var transitionSpec = _this.props.configureTransition(currentTransitionProps, nextTransitionProps);
-
-          var timing = transitionSpec.timing,
-              transitionConfig = _objectWithoutProperties(transitionSpec, ["timing"]);
-
-          timing(_this.props.position, _extends({}, transitionConfig, {
-            toValue: toValue
-          })).start(function (_ref2) {
-            var finished = _ref2.finished;
-
-            if (finished) {
-              _this.props.jumpToIndex(toValue);
-
-              _this._pendingIndex = null;
-            }
-          });
-        } else {
-          _this.props.position.setValue(toValue);
-
-          _this.props.jumpToIndex(toValue);
-
-          _this._pendingIndex = null;
-        }
+        _this._pendingIndex = index;
       }, _temp), _possibleConstructorReturn(_this, _ret);
     }
 
@@ -219,11 +179,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         });
       }
     }, {
-      key: "componentDidMount",
-      value: function componentDidMount() {
-        this._resetListener = this.props.subscribe('reset', this._transitionTo);
-      }
-    }, {
       key: "componentDidUpdate",
       value: function componentDidUpdate(prevProps) {
         if (prevProps.navigationState.index !== this.props.navigationState.index) {
@@ -231,30 +186,24 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         }
       }
     }, {
-      key: "componentWillUnmount",
-      value: function componentWillUnmount() {
-        this._resetListener && this._resetListener.remove();
-      }
-    }, {
       key: "render",
       value: function render() {
         var _props = this.props,
-            layout = _props.layout,
-            position = _props.position,
+            panX = _props.panX,
+            offsetX = _props.offsetX,
             navigationState = _props.navigationState,
+            layout = _props.layout,
             children = _props.children;
         var width = layout.width;
         var routes = navigationState.routes;
-        var inputRange = [-1].concat(_toConsumableArray(routes.map(function (x, i) {
-          return i;
-        })));
-        var outputRange = inputRange.map(function (i) {
-          return width * i * (_reactNative.I18nManager.isRTL ? 1 : -1);
+        var maxTranslate = width * (routes.length - 1);
+
+        var translateX = _reactNative.Animated.add(panX, offsetX).interpolate({
+          inputRange: [-maxTranslate, 0],
+          outputRange: [-maxTranslate, 0],
+          extrapolate: 'clamp'
         });
-        var translateX = position.interpolate({
-          inputRange: inputRange,
-          outputRange: outputRange
-        });
+
         return React.createElement(
           _reactNative.Animated.View,
           _extends({
@@ -267,7 +216,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           }, this._panResponder.panHandlers, {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 284
+              lineNumber: 238
             }
           }),
           React.Children.map(children, function (child, i) {
@@ -281,7 +230,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 } : i === navigationState.index ? _reactNative.StyleSheet.absoluteFill : null,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 294
+                  lineNumber: 251
                 }
               },
               i === navigationState.index || width ? child : null
@@ -292,25 +241,23 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }]);
 
     return TabViewPagerPan;
-  }(React.Component), _class.propTypes = _extends({}, _TabViewPropTypes.SceneRendererPropType, {
+  }(React.Component), _class.propTypes = _extends({}, _TabViewPropTypes.PagerRendererPropType, {
     configureTransition: _propTypes2.default.func.isRequired,
-    animationEnabled: _propTypes2.default.bool,
-    swipeEnabled: _propTypes2.default.bool,
-    swipeDistanceThreshold: _propTypes2.default.number.isRequired,
-    swipeVelocityThreshold: _propTypes2.default.number.isRequired,
+    swipeDistanceThreshold: _propTypes2.default.number,
+    swipeVelocityThreshold: _propTypes2.default.number,
     onSwipeStart: _propTypes2.default.func,
-    onSwipeEnd: _propTypes2.default.func,
-    children: _propTypes2.default.node
+    onSwipeEnd: _propTypes2.default.func
   }), _class.defaultProps = {
+    canJumpToTab: function canJumpToTab() {
+      return true;
+    },
     configureTransition: function configureTransition() {
       return DefaultTransitionSpec;
     },
     initialLayout: {
       height: 0,
       width: 0
-    },
-    swipeDistanceThreshold: 120,
-    swipeVelocityThreshold: 0.25
+    }
   }, _temp2));
 
   exports.default = TabViewPagerPan;

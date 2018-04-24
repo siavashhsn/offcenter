@@ -29,6 +29,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       return screen;
     }
 
-    throw new Error("Route " + routeName + " must define a screen or a getScreen.");
+    return routeConfig;
   }
 });

@@ -5,7 +5,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _react2 = _require(_dependencyMap[0], "react");
 
-  var React = _interopRequireWildcard(_react2);
+  var _react3 = _interopRequireDefault(_react2);
 
   var _index = _require(_dependencyMap[1], "./../../../../react-transform-hmr/lib/index.js");
 
@@ -19,25 +19,23 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _reactNative = _require(_dependencyMap[2], "react-native");
 
-  var _withCachedChildNavigation = _require(_dependencyMap[3], "../../withCachedChildNavigation");
+  var _reactNativeSafeAreaView = _require(_dependencyMap[3], "react-native-safe-area-view");
+
+  var _reactNativeSafeAreaView2 = _interopRequireDefault(_reactNativeSafeAreaView);
+
+  var _withCachedChildNavigation = _require(_dependencyMap[4], "../../withCachedChildNavigation");
 
   var _withCachedChildNavigation2 = _interopRequireDefault(_withCachedChildNavigation);
 
-  var _NavigationActions = _require(_dependencyMap[4], "../../NavigationActions");
+  var _NavigationActions = _require(_dependencyMap[5], "../../NavigationActions");
 
   var _NavigationActions2 = _interopRequireDefault(_NavigationActions);
 
-  var _invariant = _require(_dependencyMap[5], "../../utils/invariant");
+  var _invariant = _require(_dependencyMap[6], "../../utils/invariant");
 
   var _invariant2 = _interopRequireDefault(_invariant);
 
-  var _SafeAreaView = _require(_dependencyMap[6], "../SafeAreaView");
-
-  var _SafeAreaView2 = _interopRequireDefault(_SafeAreaView);
-
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -55,7 +53,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     filename: "/home/siavash/off-center/node_modules/react-navigation/src/views/Drawer/DrawerSidebar.js",
     components: _components,
     locals: [module],
-    imports: [React.default]
+    imports: [_react3.default]
   });
 
   function _wrapComponent(id) {
@@ -135,9 +133,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           var subAction = void 0;
 
           if (route.index !== undefined && route.index !== 0) {
-            route = route;
-            subAction = _NavigationActions2.default.navigate({
-              routeName: route.routes[0].routeName
+            subAction = _NavigationActions2.default.reset({
+              index: 0,
+              actions: [_NavigationActions2.default.navigate({
+                routeName: route.routes[0].routeName
+              })]
             });
           }
 
@@ -157,16 +157,16 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
         var state = this.props.navigation.state;
         (0, _invariant2.default)(typeof state.index === 'number', 'should be set');
-        return React.createElement(
+        return _react3.default.createElement(
           _reactNative.View,
           {
             style: [styles.container, this.props.style],
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 111
+              lineNumber: 85
             }
           },
-          React.createElement(ContentComponent, _extends({}, this.props.contentOptions, {
+          _react3.default.createElement(ContentComponent, _extends({}, this.props.contentOptions, {
             navigation: this.props.navigation,
             items: state.routes,
             activeItemKey: state.routes[state.index] ? state.routes[state.index].key : null,
@@ -178,7 +178,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             drawerPosition: this.props.drawerPosition,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 112
+              lineNumber: 86
             }
           }))
         );
@@ -186,7 +186,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }]);
 
     return DrawerSidebar;
-  }(React.PureComponent));
+  }(_react3.default.PureComponent));
 
   exports.default = (0, _withCachedChildNavigation2.default)(DrawerSidebar);
 

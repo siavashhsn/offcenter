@@ -5,7 +5,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _react2 = _require(_dependencyMap[0], "react");
 
-  var React = _interopRequireWildcard(_react2);
+  var _react3 = _interopRequireDefault(_react2);
 
   var _index = _require(_dependencyMap[1], "./../../../react-transform-hmr/lib/index.js");
 
@@ -29,8 +29,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
   function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -47,7 +45,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     filename: "/home/siavash/off-center/node_modules/react-navigation/src/views/Transitioner.js",
     components: _components,
     locals: [module],
-    imports: [React.default]
+    imports: [_react3.default]
   });
 
   function _wrapComponent(id) {
@@ -192,14 +190,14 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }, {
       key: "render",
       value: function render() {
-        return React.createElement(
+        return _react3.default.createElement(
           _reactNative.View,
           {
             onLayout: this._onLayout,
             style: [styles.main],
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 192
+              lineNumber: 142
             }
           },
           this.props.render(this._transitionProps, this._prevTransitionProps)
@@ -243,9 +241,10 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
         var prevTransitionProps = this._prevTransitionProps;
         this._prevTransitionProps = null;
+        var scenes = this.state.scenes.filter(isSceneNotStale);
 
         var nextState = _extends({}, this.state, {
-          scenes: this.state.scenes.filter(isSceneNotStale)
+          scenes: this.state.scenes.length === scenes.length ? this.state.scenes : scenes
         });
 
         this._transitionProps = buildTransitionProps(this.props, nextState);
@@ -290,7 +289,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }]);
 
     return Transitioner;
-  }(React.Component));
+  }(_react3.default.Component));
 
   function buildTransitionProps(props, state) {
     var navigation = props.navigation;

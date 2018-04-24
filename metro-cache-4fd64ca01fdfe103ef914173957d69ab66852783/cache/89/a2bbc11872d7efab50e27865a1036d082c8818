@@ -49,27 +49,51 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   var SignInForm = _wrapComponent("SignInForm")(function (_React$Component) {
     _inherits(SignInForm, _React$Component);
 
-    function SignInForm() {
-      _classCallCheck(this, SignInForm);
-
-      return _possibleConstructorReturn(this, (SignInForm.__proto__ || Object.getPrototypeOf(SignInForm)).apply(this, arguments));
-    }
-
     _createClass(SignInForm, [{
       key: "goHomePage",
       value: function goHomePage() {
         _reactNativeRouterFlux.Actions.Authentication();
       }
-    }, {
+    }]);
+
+    function SignInForm(props) {
+      _classCallCheck(this, SignInForm);
+
+      var _this = _possibleConstructorReturn(this, (SignInForm.__proto__ || Object.getPrototypeOf(SignInForm)).call(this, props));
+
+      _this.login = function () {
+        fetch('http://127.0.0.1:3000/users', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            phoneNum: _this.state.phoneNum
+          })
+        }).catch(function (error) {
+          console.log(error.message);
+        });
+      };
+
+      _this.state = {
+        phoneNum: ''
+      };
+      return _this;
+    }
+
+    _createClass(SignInForm, [{
       key: "render",
       value: function render() {
+        var _this2 = this;
+
         return _react3.default.createElement(
           _reactNative.View,
           {
             style: styles.container,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 22
+              lineNumber: 87
             }
           },
           _react3.default.createElement(_reactNative.TextInput, {
@@ -77,19 +101,25 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             placeholder: "\u0634\u0645\u0627\u0631\u0647 \u062A\u0644\u0641\u0646",
             keyboardType: "numeric",
             underlineColorAndroid: 'transparent',
+            onChangeText: function onChangeText(phoneNum) {
+              return _this2.setState({
+                phoneNum: phoneNum
+              });
+            },
+            value: this.state.phoneNum,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 23
+              lineNumber: 88
             }
           }),
           _react3.default.createElement(
             _reactNative.TouchableOpacity,
             {
-              onPress: this.goHomePage,
+              onPress: this.login,
               style: styles.button,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 29
+                lineNumber: 96
               }
             },
             _react3.default.createElement(
@@ -98,7 +128,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 style: styles.buttonText,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 32
+                  lineNumber: 99
                 }
               },
               "\u0648\u0631\u0648\u062F"

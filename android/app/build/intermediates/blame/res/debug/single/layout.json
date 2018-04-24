@@ -4,12 +4,12 @@
         "source": "/home/siavash/off-center/android/app/build/intermediates/exploded-aar/com.facebook.react/react-native/0.54.0/res/layout/redbox_item_frame.xml"
     },
     {
-        "merged": "/home/siavash/off-center/android/app/build/intermediates/res/merged/debug/layout/notification_media_action.xml",
-        "source": "/home/siavash/off-center/android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/notification_media_action.xml"
-    },
-    {
         "merged": "/home/siavash/off-center/android/app/build/intermediates/res/merged/debug/layout/abc_action_mode_close_item_material.xml",
         "source": "/home/siavash/off-center/android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/abc_action_mode_close_item_material.xml"
+    },
+    {
+        "merged": "/home/siavash/off-center/android/app/build/intermediates/res/merged/debug/layout/notification_media_action.xml",
+        "source": "/home/siavash/off-center/android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/notification_media_action.xml"
     },
     {
         "merged": "/home/siavash/off-center/android/app/build/intermediates/res/merged/debug/layout/fps_view.xml",

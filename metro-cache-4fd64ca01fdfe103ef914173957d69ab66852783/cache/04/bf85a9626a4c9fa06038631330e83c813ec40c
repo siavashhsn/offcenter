@@ -16,12 +16,16 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       return _require(_dependencyMap[3], './TabViewPagerAndroid').default;
     },
 
+    get TabViewPagerExperimental() {
+      return _require(_dependencyMap[4], './TabViewPagerExperimental').default;
+    },
+
     get TabBar() {
-      return _require(_dependencyMap[4], './TabBar').default;
+      return _require(_dependencyMap[5], './TabBar').default;
     },
 
     get SceneMap() {
-      return _require(_dependencyMap[5], './SceneMap').default;
+      return _require(_dependencyMap[6], './SceneMap').default;
     }
 
   };

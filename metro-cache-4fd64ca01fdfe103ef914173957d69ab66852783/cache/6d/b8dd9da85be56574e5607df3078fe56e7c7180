@@ -1,24 +1,22 @@
 __d(function (global, _require, module, exports, _dependencyMap) {
+  var isarray = _require(_dependencyMap[0], 'isarray');
+
   module.exports = pathToRegexp;
   module.exports.parse = parse;
   module.exports.compile = compile;
   module.exports.tokensToFunction = tokensToFunction;
   module.exports.tokensToRegExp = tokensToRegExp;
-  var DEFAULT_DELIMITER = '/';
-  var DEFAULT_DELIMITERS = './';
-  var PATH_REGEXP = new RegExp(['(\\\\.)', '(?:\\:(\\w+)(?:\\(((?:\\\\.|[^\\\\()])+)\\))?|\\(((?:\\\\.|[^\\\\()])+)\\))([+*?])?'].join('|'), 'g');
+  var PATH_REGEXP = new RegExp(['(\\\\.)', '([\\/.])?(?:(?:\\:(\\w+)(?:\\(((?:\\\\.|[^\\\\()])+)\\))?|\\(((?:\\\\.|[^\\\\()])+)\\))([+*?])?|(\\*))'].join('|'), 'g');
 
   function parse(str, options) {
     var tokens = [];
     var key = 0;
     var index = 0;
     var path = '';
-    var defaultDelimiter = options && options.delimiter || DEFAULT_DELIMITER;
-    var delimiters = options && options.delimiters || DEFAULT_DELIMITERS;
-    var pathEscaped = false;
+    var defaultDelimiter = options && options.delimiter || '/';
     var res;
 
-    while ((res = PATH_REGEXP.exec(str)) !== null) {
+    while ((res = PATH_REGEXP.exec(str)) != null) {
       var m = res[0];
       var escaped = res[1];
       var offset = res.index;
@@ -27,50 +25,45 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
       if (escaped) {
         path += escaped[1];
-        pathEscaped = true;
         continue;
       }
 
-      var prev = '';
       var next = str[index];
-      var name = res[2];
-      var capture = res[3];
-      var group = res[4];
-      var modifier = res[5];
-
-      if (!pathEscaped && path.length) {
-        var k = path.length - 1;
-
-        if (delimiters.indexOf(path[k]) > -1) {
-          prev = path[k];
-          path = path.slice(0, k);
-        }
-      }
+      var prefix = res[2];
+      var name = res[3];
+      var capture = res[4];
+      var group = res[5];
+      var modifier = res[6];
+      var asterisk = res[7];
 
       if (path) {
         tokens.push(path);
         path = '';
-        pathEscaped = false;
       }
 
-      var partial = prev !== '' && next !== undefined && next !== prev;
+      var partial = prefix != null && next != null && next !== prefix;
       var repeat = modifier === '+' || modifier === '*';
       var optional = modifier === '?' || modifier === '*';
-      var delimiter = prev || defaultDelimiter;
+      var delimiter = res[2] || defaultDelimiter;
       var pattern = capture || group;
       tokens.push({
         name: name || key++,
-        prefix: prev,
+        prefix: prefix || '',
         delimiter: delimiter,
         optional: optional,
         repeat: repeat,
         partial: partial,
-        pattern: pattern ? escapeGroup(pattern) : '[^' + escapeString(delimiter) + ']+?'
+        asterisk: !!asterisk,
+        pattern: pattern ? escapeGroup(pattern) : asterisk ? '.*' : '[^' + escapeString(delimiter) + ']+?'
       });
     }
 
-    if (path || index < str.length) {
-      tokens.push(path + str.substr(index));
+    if (index < str.length) {
+      path += str.substr(index);
+    }
+
+    if (path) {
+      tokens.push(path);
     }
 
     return tokens;
@@ -78,6 +71,18 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   function compile(str, options) {
     return tokensToFunction(parse(str, options));
+  }
+
+  function encodeURIComponentPretty(str) {
+    return encodeURI(str).replace(/[\/?#]/g, function (c) {
+      return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+    });
+  }
+
+  function encodeAsterisk(str) {
+    return encodeURI(str).replace(/[?#]/g, function (c) {
+      return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+    });
   }
 
   function tokensToFunction(tokens) {
@@ -89,9 +94,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       }
     }
 
-    return function (data, options) {
+    return function (obj, opts) {
       var path = '';
-      var encode = options && options.encode || encodeURIComponent;
+      var data = obj || {};
+      var options = opts || {};
+      var encode = options.pretty ? encodeURIComponentPretty : encodeURIComponent;
 
       for (var i = 0; i < tokens.length; i++) {
         var token = tokens[i];
@@ -101,24 +108,39 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           continue;
         }
 
-        var value = data ? data[token.name] : undefined;
+        var value = data[token.name];
         var segment;
 
-        if (Array.isArray(value)) {
+        if (value == null) {
+          if (token.optional) {
+            if (token.partial) {
+              path += token.prefix;
+            }
+
+            continue;
+          } else {
+            throw new TypeError('Expected "' + token.name + '" to be defined');
+          }
+        }
+
+        if (isarray(value)) {
           if (!token.repeat) {
-            throw new TypeError('Expected "' + token.name + '" to not repeat, but got array');
+            throw new TypeError('Expected "' + token.name + '" to not repeat, but received `' + JSON.stringify(value) + '`');
           }
 
           if (value.length === 0) {
-            if (token.optional) continue;
-            throw new TypeError('Expected "' + token.name + '" to not be empty');
+            if (token.optional) {
+              continue;
+            } else {
+              throw new TypeError('Expected "' + token.name + '" to not be empty');
+            }
           }
 
           for (var j = 0; j < value.length; j++) {
-            segment = encode(value[j], token);
+            segment = encode(value[j]);
 
             if (!matches[i].test(segment)) {
-              throw new TypeError('Expected all "' + token.name + '" to match "' + token.pattern + '"');
+              throw new TypeError('Expected all "' + token.name + '" to match "' + token.pattern + '", but received `' + JSON.stringify(segment) + '`');
             }
 
             path += (j === 0 ? token.prefix : token.delimiter) + segment;
@@ -127,23 +149,13 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           continue;
         }
 
-        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-          segment = encode(String(value), token);
+        segment = token.asterisk ? encodeAsterisk(value) : encode(value);
 
-          if (!matches[i].test(segment)) {
-            throw new TypeError('Expected "' + token.name + '" to match "' + token.pattern + '", but got "' + segment + '"');
-          }
-
-          path += token.prefix + segment;
-          continue;
+        if (!matches[i].test(segment)) {
+          throw new TypeError('Expected "' + token.name + '" to match "' + token.pattern + '", but received "' + segment + '"');
         }
 
-        if (token.optional) {
-          if (token.partial) path += token.prefix;
-          continue;
-        }
-
-        throw new TypeError('Expected "' + token.name + '" to be ' + (token.repeat ? 'an array' : 'a string'));
+        path += token.prefix + segment;
       }
 
       return path;
@@ -151,19 +163,23 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   function escapeString(str) {
-    return str.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1');
+    return str.replace(/([.+*?=^!:${}()[\]|\/\\])/g, '\\$1');
   }
 
   function escapeGroup(group) {
-    return group.replace(/([=!:$/()])/g, '\\$1');
+    return group.replace(/([=!:$\/()])/g, '\\$1');
+  }
+
+  function attachKeys(re, keys) {
+    re.keys = keys;
+    return re;
   }
 
   function flags(options) {
-    return options && options.sensitive ? '' : 'i';
+    return options.sensitive ? '' : 'i';
   }
 
   function regexpToRegexp(path, keys) {
-    if (!keys) return path;
     var groups = path.source.match(/\((?!\?)/g);
 
     if (groups) {
@@ -175,12 +191,13 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           optional: false,
           repeat: false,
           partial: false,
+          asterisk: false,
           pattern: null
         });
       }
     }
 
-    return path;
+    return attachKeys(path, keys);
   }
 
   function arrayToRegexp(path, keys, options) {
@@ -190,7 +207,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       parts.push(pathToRegexp(path[i], keys, options).source);
     }
 
-    return new RegExp('(?:' + parts.join('|') + ')', flags(options));
+    var regexp = new RegExp('(?:' + parts.join('|') + ')', flags(options));
+    return attachKeys(regexp, keys);
   }
 
   function stringToRegexp(path, keys, options) {
@@ -198,55 +216,73 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   function tokensToRegExp(tokens, keys, options) {
+    if (!isarray(keys)) {
+      options = keys || options;
+      keys = [];
+    }
+
     options = options || {};
     var strict = options.strict;
     var end = options.end !== false;
-    var delimiter = escapeString(options.delimiter || DEFAULT_DELIMITER);
-    var delimiters = options.delimiters || DEFAULT_DELIMITERS;
-    var endsWith = [].concat(options.endsWith || []).map(escapeString).concat('$').join('|');
     var route = '';
-    var isEndDelimited = false;
 
     for (var i = 0; i < tokens.length; i++) {
       var token = tokens[i];
 
       if (typeof token === 'string') {
         route += escapeString(token);
-        isEndDelimited = i === tokens.length - 1 && delimiters.indexOf(token[token.length - 1]) > -1;
       } else {
         var prefix = escapeString(token.prefix);
-        var capture = token.repeat ? '(?:' + token.pattern + ')(?:' + prefix + '(?:' + token.pattern + '))*' : token.pattern;
-        if (keys) keys.push(token);
+        var capture = '(?:' + token.pattern + ')';
+        keys.push(token);
+
+        if (token.repeat) {
+          capture += '(?:' + prefix + capture + ')*';
+        }
 
         if (token.optional) {
-          if (token.partial) {
-            route += prefix + '(' + capture + ')?';
+          if (!token.partial) {
+            capture = '(?:' + prefix + '(' + capture + '))?';
           } else {
-            route += '(?:' + prefix + '(' + capture + '))?';
+            capture = prefix + '(' + capture + ')?';
           }
         } else {
-          route += prefix + '(' + capture + ')';
+          capture = prefix + '(' + capture + ')';
         }
+
+        route += capture;
       }
     }
 
-    if (end) {
-      if (!strict) route += '(?:' + delimiter + ')?';
-      route += endsWith === '$' ? '$' : '(?=' + endsWith + ')';
-    } else {
-      if (!strict) route += '(?:' + delimiter + '(?=' + endsWith + '))?';
-      if (!isEndDelimited) route += '(?=' + delimiter + '|' + endsWith + ')';
+    var delimiter = escapeString(options.delimiter || '/');
+    var endsWithDelimiter = route.slice(-delimiter.length) === delimiter;
+
+    if (!strict) {
+      route = (endsWithDelimiter ? route.slice(0, -delimiter.length) : route) + '(?:' + delimiter + '(?=$))?';
     }
 
-    return new RegExp('^' + route, flags(options));
+    if (end) {
+      route += '$';
+    } else {
+      route += strict && endsWithDelimiter ? '' : '(?=' + delimiter + '|$)';
+    }
+
+    return attachKeys(new RegExp('^' + route, flags(options)), keys);
   }
 
   function pathToRegexp(path, keys, options) {
+    if (!isarray(keys)) {
+      options = keys || options;
+      keys = [];
+    }
+
+    options = options || {};
+
     if (path instanceof RegExp) {
       return regexpToRegexp(path, keys);
     }
 
-    if (Array.isArray(path)) {
+    if (isarray(path)) {
       return arrayToRegexp(path, keys, options);
     }
 

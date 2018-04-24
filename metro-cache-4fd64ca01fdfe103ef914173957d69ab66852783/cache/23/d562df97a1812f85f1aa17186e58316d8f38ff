@@ -32,8 +32,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-  function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
   function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -87,12 +85,28 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
       _initialiseProps.call(_this);
 
+      var navigationState = _this.props.navigationState;
+
+      var layout = _extends({}, _this.props.initialLayout, {
+        measured: false
+      });
+
+      var panX = new _reactNative.Animated.Value(0);
+      var offsetX = new _reactNative.Animated.Value(-navigationState.index * layout.width);
+      var layoutXY = new _reactNative.Animated.ValueXY({
+        x: layout.width || 0.001,
+        y: layout.height || 0.001
+      });
+
+      var position = _reactNative.Animated.multiply(_reactNative.Animated.divide(_reactNative.Animated.add(panX, offsetX), layoutXY.x), -1);
+
       _this.state = {
-        loaded: [_this.props.navigationState.index],
-        layout: _extends({}, _this.props.initialLayout, {
-          measured: false
-        }),
-        position: new _reactNative.Animated.Value(_this.props.navigationState.index)
+        loaded: [navigationState.index],
+        layout: layout,
+        layoutXY: layoutXY,
+        panX: panX,
+        offsetX: offsetX,
+        position: position
       };
       return _this;
     }
@@ -101,13 +115,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       key: "componentDidMount",
       value: function componentDidMount() {
         this._mounted = true;
-        this._positionListener = this.state.position.addListener(this._trackPosition);
       }
     }, {
       key: "componentWillUnmount",
       value: function componentWillUnmount() {
         this._mounted = false;
-        this.state.position.removeListener(this._positionListener);
       }
     }, {
       key: "render",
@@ -117,15 +129,12 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         var _props = this.props,
             navigationState = _props.navigationState,
             onIndexChange = _props.onIndexChange,
-            onPositionChange = _props.onPositionChange,
-            canJumpToTab = _props.canJumpToTab,
-            lazy = _props.lazy,
             initialLayout = _props.initialLayout,
             renderScene = _props.renderScene,
             renderPager = _props.renderPager,
             renderHeader = _props.renderHeader,
             renderFooter = _props.renderFooter,
-            rest = _objectWithoutProperties(_props, ["navigationState", "onIndexChange", "onPositionChange", "canJumpToTab", "lazy", "initialLayout", "renderScene", "renderPager", "renderHeader", "renderFooter"]);
+            rest = _objectWithoutProperties(_props, ["navigationState", "onIndexChange", "initialLayout", "renderScene", "renderPager", "renderHeader", "renderFooter"]);
 
         var props = this._buildSceneRendererProps();
 
@@ -137,17 +146,27 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             style: [styles.container, this.props.style],
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 252
+              lineNumber: 194
             }
           },
           renderHeader && renderHeader(props),
           renderPager(_extends({}, props, rest, {
+            panX: this.state.panX,
+            offsetX: this.state.offsetX,
             children: navigationState.routes.map(function (route, index) {
-              return _this2._renderScene(_extends({}, props, {
+              var scene = _this2._renderScene(_extends({}, props, {
                 route: route,
                 index: index,
                 focused: index === navigationState.index
               }));
+
+              if (scene) {
+                return React.cloneElement(scene, {
+                  key: route.key
+                });
+              }
+
+              return scene;
             })
           })),
           renderFooter && renderFooter(props)
@@ -159,99 +178,39 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }(React.Component), _class.propTypes = {
     navigationState: _TabViewPropTypes.NavigationStatePropType.isRequired,
     onIndexChange: _propTypes2.default.func.isRequired,
-    onPositionChange: _propTypes2.default.func,
     initialLayout: _propTypes2.default.shape({
       height: _propTypes2.default.number.isRequired,
       width: _propTypes2.default.number.isRequired
     }),
-    canJumpToTab: _propTypes2.default.func,
+    canJumpToTab: _propTypes2.default.func.isRequired,
     renderPager: _propTypes2.default.func.isRequired,
     renderScene: _propTypes2.default.func.isRequired,
     renderHeader: _propTypes2.default.func,
-    renderFooter: _propTypes2.default.func,
-    lazy: _propTypes2.default.bool
+    renderFooter: _propTypes2.default.func
   }, _class.defaultProps = {
+    canJumpToTab: function canJumpToTab() {
+      return true;
+    },
     renderPager: function renderPager(props) {
       return React.createElement(TabViewPager, _extends({}, props, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 77
+          lineNumber: 71
         }
       }));
     },
     initialLayout: {
       height: 0,
       width: 0
-    }
+    },
+    useNativeDriver: false
   }, _initialiseProps = function _initialiseProps() {
     var _this3 = this;
 
     this._mounted = false;
-    this._subscriptions = {};
 
     this._renderScene = function (props) {
-      var _props2 = _this3.props,
-          renderScene = _props2.renderScene,
-          lazy = _props2.lazy;
-      var navigationState = props.navigationState;
-      var loaded = _this3.state.loaded;
-
-      if (lazy) {
-        if (loaded.includes(navigationState.routes.indexOf(props.route))) {
-          return renderScene(props);
-        }
-
-        return null;
-      }
-
-      return renderScene(props);
-    };
-
-    this._handlePositionChange = function (value) {
-      var _props3 = _this3.props,
-          onPositionChange = _props3.onPositionChange,
-          navigationState = _props3.navigationState,
-          lazy = _props3.lazy;
-
-      if (onPositionChange) {
-        onPositionChange({
-          value: value
-        });
-      }
-
-      var loaded = _this3.state.loaded;
-
-      if (lazy) {
-        var next = Math.ceil(value);
-
-        if (next === navigationState.index) {
-          next = Math.floor(value);
-        }
-
-        if (loaded.includes(next)) {
-          return;
-        }
-
-        _this3.setState({
-          loaded: [].concat(_toConsumableArray(loaded), [next])
-        });
-      }
-    };
-
-    this._trackPosition = function (e) {
-      _this3._handlePositionChange(e.value);
-
-      _this3._triggerEvent('position', e.value);
-
-      _this3._lastPosition = e.value;
-    };
-
-    this._getLastPosition = function () {
-      if (typeof _this3._lastPosition === 'number') {
-        return _this3._lastPosition;
-      } else {
-        return _this3.props.navigationState.index;
-      }
+      return _this3.props.renderScene(props);
     };
 
     this._handleLayout = function (e) {
@@ -262,6 +221,13 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       if (_this3.state.layout.width === width && _this3.state.layout.height === height) {
         return;
       }
+
+      _this3.state.offsetX.setValue(-_this3.props.navigationState.index * width);
+
+      _this3.state.layoutXY.setValue({
+        x: width || 0.001,
+        y: height || 0.001
+      });
 
       _this3.setState({
         layout: {
@@ -274,12 +240,13 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     this._buildSceneRendererProps = function () {
       return {
+        panX: _this3.state.panX,
+        offsetX: _this3.state.offsetX,
+        position: _this3.state.position,
         layout: _this3.state.layout,
         navigationState: _this3.props.navigationState,
-        position: _this3.state.position,
         jumpToIndex: _this3._jumpToIndex,
-        getLastPosition: _this3._getLastPosition,
-        subscribe: _this3._addSubscription
+        useNativeDriver: _this3.props.useNativeDriver === true
       };
     };
 
@@ -288,44 +255,16 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         return;
       }
 
-      var _props4 = _this3.props,
-          canJumpToTab = _props4.canJumpToTab,
-          navigationState = _props4.navigationState;
+      var _props2 = _this3.props,
+          canJumpToTab = _props2.canJumpToTab,
+          navigationState = _props2.navigationState;
 
-      if (canJumpToTab && !canJumpToTab(navigationState.routes[index])) {
-        _this3._triggerEvent('reset', navigationState.index);
-
+      if (!canJumpToTab(navigationState.routes[index])) {
         return;
       }
 
       if (index !== navigationState.index) {
         _this3.props.onIndexChange(index);
-      }
-    };
-
-    this._addSubscription = function (event, callback) {
-      if (!_this3._subscriptions[event]) {
-        _this3._subscriptions[event] = [];
-      }
-
-      _this3._subscriptions[event].push(callback);
-
-      return {
-        remove: function remove() {
-          var index = _this3._subscriptions[event].indexOf(callback);
-
-          if (index > -1) {
-            _this3._subscriptions[event].splice(index, 1);
-          }
-        }
-      };
-    };
-
-    this._triggerEvent = function (event, value) {
-      if (_this3._subscriptions[event]) {
-        _this3._subscriptions[event].forEach(function (fn) {
-          return fn(value);
-        });
       }
     };
   }, _temp));

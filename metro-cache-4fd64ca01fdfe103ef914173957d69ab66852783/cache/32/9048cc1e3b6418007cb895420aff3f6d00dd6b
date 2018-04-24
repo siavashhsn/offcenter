@@ -11,6 +11,13 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+  var crossFadeInterpolation = function crossFadeInterpolation(first, index, last) {
+    return {
+      inputRange: [first, index - 0.9, index - 0.2, index, last],
+      outputRange: [0, 0, 0.3, 1, 0]
+    };
+  };
+
   function forLeft(props) {
     var position = props.position,
         scene = props.scene,
@@ -23,10 +30,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         last = interpolate.last;
     var index = scene.index;
     return {
-      opacity: position.interpolate({
-        inputRange: [first, first + Math.abs(index - first) / 2, index, last - Math.abs(last - index) / 2, last],
-        outputRange: [0, 0, 1, 0, 0]
-      })
+      opacity: position.interpolate(crossFadeInterpolation(first, index, last))
     };
   }
 
@@ -40,18 +44,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     var first = interpolate.first,
         last = interpolate.last;
     var index = scene.index;
-    var inputRange = [first, index, last];
     return {
-      opacity: position.interpolate({
-        inputRange: inputRange,
-        outputRange: [0, 1, 0]
-      }),
-      transform: [{
-        translateX: position.interpolate({
-          inputRange: inputRange,
-          outputRange: _reactNative.I18nManager.isRTL ? [-200, 0, 200] : [200, 0, -200]
-        })
-      }]
+      opacity: position.interpolate(crossFadeInterpolation(first, index, last))
     };
   }
 
@@ -66,15 +60,90 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         last = interpolate.last;
     var index = scene.index;
     return {
+      opacity: position.interpolate(crossFadeInterpolation(first, index, last))
+    };
+  }
+
+  function forLeftButton(props) {
+    var position = props.position,
+        scene = props.scene,
+        scenes = props.scenes;
+    var interpolate = (0, _getSceneIndicesForInterpolationInputRange2.default)(props);
+    if (!interpolate) return {
+      opacity: 0
+    };
+    var first = interpolate.first,
+        last = interpolate.last;
+    var index = scene.index;
+    return {
       opacity: position.interpolate({
-        inputRange: [first, index, last],
-        outputRange: [0, 1, 0]
+        inputRange: [first, first + Math.abs(index - first) / 2, index, last - Math.abs(last - index) / 2, last],
+        outputRange: [0, 0.5, 1, 0.5, 0]
       })
+    };
+  }
+
+  var LEFT_LABEL_OFFSET = _reactNative.Dimensions.get('window').width / 2 - 70 - 25;
+
+  function forLeftLabel(props) {
+    var position = props.position,
+        scene = props.scene,
+        scenes = props.scenes;
+    var interpolate = (0, _getSceneIndicesForInterpolationInputRange2.default)(props);
+    if (!interpolate) return {
+      opacity: 0
+    };
+    var first = interpolate.first,
+        last = interpolate.last;
+    var index = scene.index;
+    var offset = LEFT_LABEL_OFFSET;
+    return {
+      opacity: position.interpolate({
+        inputRange: [first, index - 0.35, index, index + 0.5, last],
+        outputRange: [0, 0, 1, 0.5, 0]
+      }),
+      transform: [{
+        translateX: position.interpolate({
+          inputRange: [first, index, last],
+          outputRange: _reactNative.I18nManager.isRTL ? [-offset, 0, offset] : [offset, 0, -offset * 1.5]
+        })
+      }]
+    };
+  }
+
+  var TITLE_OFFSET_IOS = _reactNative.Dimensions.get('window').width / 2 - 70 + 25;
+
+  function forCenterFromLeft(props) {
+    var position = props.position,
+        scene = props.scene;
+    var interpolate = (0, _getSceneIndicesForInterpolationInputRange2.default)(props);
+    if (!interpolate) return {
+      opacity: 0
+    };
+    var first = interpolate.first,
+        last = interpolate.last;
+    var index = scene.index;
+    var inputRange = [first, index - 0.5, index, index + 0.5, last];
+    var offset = TITLE_OFFSET_IOS;
+    return {
+      opacity: position.interpolate({
+        inputRange: [first, index - 0.5, index, index + 0.7, last],
+        outputRange: [0, 0, 1, 0, 0]
+      }),
+      transform: [{
+        translateX: position.interpolate({
+          inputRange: [first, index, last],
+          outputRange: _reactNative.I18nManager.isRTL ? [-offset, 0, offset] : [offset, 0, -offset]
+        })
+      }]
     };
   }
 
   exports.default = {
     forLeft: forLeft,
+    forLeftButton: forLeftButton,
+    forLeftLabel: forLeftLabel,
+    forCenterFromLeft: forCenterFromLeft,
     forCenter: forCenter,
     forRight: forRight
   };

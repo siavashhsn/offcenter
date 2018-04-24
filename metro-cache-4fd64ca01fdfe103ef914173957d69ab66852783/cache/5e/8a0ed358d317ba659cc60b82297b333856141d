@@ -8,7 +8,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _react = _require(_dependencyMap[0], "react");
 
-  var React = _interopRequireWildcard(_react);
+  var _react2 = _interopRequireDefault(_react);
 
   var _reactNative = _require(_dependencyMap[1], "react-native");
 
@@ -36,13 +36,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _TabBarBottom2 = _interopRequireDefault(_TabBarBottom);
 
-  var _NavigatorTypes = _require(_dependencyMap[8], "./NavigatorTypes");
-
-  var _NavigatorTypes2 = _interopRequireDefault(_NavigatorTypes);
-
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
   function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
@@ -54,27 +48,29 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     var tabBarComponent = mergedConfig.tabBarComponent,
         tabBarPosition = mergedConfig.tabBarPosition,
         tabBarOptions = mergedConfig.tabBarOptions,
+        lazy = mergedConfig.lazy,
+        removeClippedSubviews = mergedConfig.removeClippedSubviews,
         swipeEnabled = mergedConfig.swipeEnabled,
         animationEnabled = mergedConfig.animationEnabled,
         configureTransition = mergedConfig.configureTransition,
-        lazy = mergedConfig.lazy,
         initialLayout = mergedConfig.initialLayout,
-        tabsConfig = _objectWithoutProperties(mergedConfig, ["tabBarComponent", "tabBarPosition", "tabBarOptions", "swipeEnabled", "animationEnabled", "configureTransition", "lazy", "initialLayout"]);
+        tabsConfig = _objectWithoutProperties(mergedConfig, ["tabBarComponent", "tabBarPosition", "tabBarOptions", "lazy", "removeClippedSubviews", "swipeEnabled", "animationEnabled", "configureTransition", "initialLayout"]);
 
     var router = (0, _TabRouter2.default)(routeConfigs, tabsConfig);
-    var navigator = (0, _createNavigator2.default)(router, routeConfigs, config, _NavigatorTypes2.default.TABS)(function (props) {
-      return React.createElement(_TabView2.default, _extends({}, props, {
+    var navigator = (0, _createNavigator2.default)(router, routeConfigs, config)(function (props) {
+      return _react2.default.createElement(_TabView2.default, _extends({}, props, {
+        lazy: lazy,
+        removeClippedSubviews: removeClippedSubviews,
         tabBarComponent: tabBarComponent,
         tabBarPosition: tabBarPosition,
         tabBarOptions: tabBarOptions,
         swipeEnabled: swipeEnabled,
         animationEnabled: animationEnabled,
         configureTransition: configureTransition,
-        lazy: lazy,
         initialLayout: initialLayout,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 65
+          lineNumber: 34
         }
       }));
     });
@@ -87,7 +83,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       tabBarPosition: 'bottom',
       swipeEnabled: false,
       animationEnabled: false,
-      lazy: false,
       initialLayout: undefined
     },
     AndroidTopTabs: {
@@ -95,7 +90,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       tabBarPosition: 'top',
       swipeEnabled: true,
       animationEnabled: true,
-      lazy: false,
       initialLayout: undefined
     }
   };

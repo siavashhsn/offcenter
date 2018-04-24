@@ -5,7 +5,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _react2 = _require(_dependencyMap[0], "react");
 
-  var React = _interopRequireWildcard(_react2);
+  var _react3 = _interopRequireDefault(_react2);
 
   var _index = _require(_dependencyMap[1], "./../../react-transform-hmr/lib/index.js");
 
@@ -23,9 +23,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _addNavigationHelpers2 = _interopRequireDefault(_addNavigationHelpers);
 
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  var _getChildEventSubscriber = _require(_dependencyMap[3], "./getChildEventSubscriber");
 
-  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+  var _getChildEventSubscriber2 = _interopRequireDefault(_getChildEventSubscriber);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -43,7 +45,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     filename: "/home/siavash/off-center/node_modules/react-navigation/src/withCachedChildNavigation.js",
     components: _components,
     locals: [module],
-    imports: [React.default]
+    imports: [_react3.default]
   });
 
   function _wrapComponent(id) {
@@ -70,7 +72,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           args[_key] = arguments[_key];
         }
 
-        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = _class.__proto__ || Object.getPrototypeOf(_class)).call.apply(_ref, [this].concat(args))), _this), _this._updateNavigationProps = function (navigation) {
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = _class.__proto__ || Object.getPrototypeOf(_class)).call.apply(_ref, [this].concat(args))), _this), _this._childEventSubscribers = {}, _this._isRouteFocused = function (route) {
+          var state = _this.props.navigation.state;
+          var focusedRoute = state.routes[state.index];
+          return route === focusedRoute;
+        }, _this._updateNavigationProps = function (navigation) {
           if (!_this._childNavigationProps) {
             _this._childNavigationProps = {};
           }
@@ -82,9 +88,17 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               return;
             }
 
+            if (!_this._childEventSubscribers[route.key]) {
+              _this._childEventSubscribers[route.key] = (0, _getChildEventSubscriber2.default)(navigation.addListener, route.key);
+            }
+
             _this._childNavigationProps[route.key] = (0, _addNavigationHelpers2.default)({
               dispatch: navigation.dispatch,
-              state: route
+              state: route,
+              isFocused: function isFocused() {
+                return _this._isRouteFocused(route);
+              },
+              addListener: _this._childEventSubscribers[route.key]
             });
           });
         }, _temp), _possibleConstructorReturn(_this, _ret);
@@ -101,19 +115,33 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           this._updateNavigationProps(nextProps.navigation);
         }
       }, {
+        key: "componentDidUpdate",
+        value: function componentDidUpdate() {
+          var _this2 = this;
+
+          var activeKeys = this.props.navigation.state.routes.map(function (route) {
+            return route.key;
+          });
+          Object.keys(this._childEventSubscribers).forEach(function (key) {
+            if (!activeKeys.includes(key)) {
+              delete _this2._childEventSubscribers[key];
+            }
+          });
+        }
+      }, {
         key: "render",
         value: function render() {
-          return React.createElement(Comp, _extends({}, this.props, {
+          return _react3.default.createElement(Comp, _extends({}, this.props, {
             childNavigationProps: this._childNavigationProps,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 66
+              lineNumber: 69
             }
           }));
         }
       }]);
 
       return _class;
-    }(React.PureComponent), _class.displayName = "withCachedChildNavigation(" + displayName + ")", _temp2));
+    }(_react3.default.PureComponent), _class.displayName = "withCachedChildNavigation(" + displayName + ")", _temp2));
   }
 });

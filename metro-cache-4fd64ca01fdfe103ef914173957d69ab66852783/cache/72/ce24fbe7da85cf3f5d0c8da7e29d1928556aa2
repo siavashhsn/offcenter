@@ -33,11 +33,16 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
+  function childrenUpdateWithoutSwitchingIndex(actionType) {
+    return [_NavigationActions2.default.SET_PARAMS, _NavigationActions2.default.COMPLETE_TRANSITION].includes(actionType);
+  }
+
   exports.default = function (routeConfigs) {
     var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     (0, _validateRouteConfigMap2.default)(routeConfigs);
     var order = config.order || Object.keys(routeConfigs);
     var paths = config.paths || {};
+    var initialRouteParams = config.initialRouteParams;
     var initialRouteName = config.initialRouteName || order[0];
     var initialRouteIndex = order.indexOf(initialRouteName);
     var backBehavior = config.backBehavior || 'initialRoute';
@@ -47,9 +52,10 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       var routeConfig = routeConfigs[routeName];
       paths[routeName] = typeof routeConfig.path === 'string' ? routeConfig.path : routeName;
       tabRouters[routeName] = null;
+      var screen = (0, _getScreenForRouteName2.default)(routeConfigs, routeName);
 
-      if (routeConfig.screen && routeConfig.screen.router) {
-        tabRouters[routeName] = routeConfig.screen.router;
+      if (screen.router) {
+        tabRouters[routeName] = screen.router;
       }
     });
 
@@ -65,6 +71,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
         if (!state) {
           var _routes = order.map(function (routeName) {
+            var params = routeName === initialRouteName ? initialRouteParams : undefined;
             var tabRouter = tabRouters[routeName];
 
             if (tabRouter) {
@@ -72,19 +79,22 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
               return _extends({}, tabRouter.getStateForAction(childAction), {
                 key: routeName,
-                routeName: routeName
+                routeName: routeName,
+                params: params
               });
             }
 
             return {
               key: routeName,
-              routeName: routeName
+              routeName: routeName,
+              params: params
             };
           });
 
           state = {
             routes: _routes,
-            index: initialRouteIndex
+            index: initialRouteIndex,
+            isTransitioning: false
           };
         }
 
@@ -94,7 +104,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           if (params) {
             state.routes = state.routes.map(function (route) {
               return _extends({}, route, {
-                params: _extends({}, route.params, params)
+                params: _extends({}, route.params, params, route.routeName === initialRouteName ? initialRouteParams : null)
               });
             });
           }
@@ -123,8 +133,12 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         var activeTabIndex = state.index;
         var isBackEligible = action.key == null || action.key === activeTabLastState.key;
 
-        if (action.type === _NavigationActions2.default.BACK && isBackEligible && shouldBackNavigateToInitialRoute) {
-          activeTabIndex = initialRouteIndex;
+        if (action.type === _NavigationActions2.default.BACK) {
+          if (isBackEligible && shouldBackNavigateToInitialRoute) {
+            activeTabIndex = initialRouteIndex;
+          } else {
+            return state;
+          }
         }
 
         var didNavigate = false;
@@ -224,7 +238,10 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
           return false;
         });
-        index = action.type === _NavigationActions2.default.SET_PARAMS ? state.index : index;
+
+        if (childrenUpdateWithoutSwitchingIndex(action.type)) {
+          index = state.index;
+        }
 
         if (index !== state.index || routes !== state.routes) {
           return _extends({}, state, {
@@ -236,7 +253,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         return state;
       },
       getComponentForState: function getComponentForState(state) {
-        var routeName = order[state.index];
+        var routeName = state.routes[state.index].routeName;
         (0, _invariant2.default)(routeName, "There is no route defined for index " + state.index + ". Check that\n        that you passed in a navigation state with a valid tab/screen index.");
         var childRouter = tabRouters[routeName];
 

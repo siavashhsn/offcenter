@@ -95,7 +95,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               background: _reactNative.TouchableNativeFeedback.Ripple(pressColor, borderless),
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 49
+                lineNumber: 48
               }
             }),
             React.createElement(
@@ -104,7 +104,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 style: style,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 54
+                  lineNumber: 53
                 }
               },
               React.Children.only(this.props.children)
@@ -119,7 +119,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               activeOpacity: pressOpacity,
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 59
+                lineNumber: 58
               }
             }),
             this.props.children

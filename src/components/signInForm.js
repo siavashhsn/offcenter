@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 
 // import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
@@ -17,6 +18,70 @@ export default class SignInForm extends React.Component {
     Actions.Authentication(); 
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {phoneNum: ''};
+  }
+
+
+  login = () => {
+    fetch('http://127.0.0.1:3000/users', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        phoneNum: this.state.phoneNum
+      })
+    })
+    .catch((error) => {
+      console.log(error.message);
+    })
+    // .then((response) => response.json())
+    // .then((res) => {
+    //   if (res.success === true) {
+    //     var phoneNum = res.message;
+    //     AsyncStorage.setItem('phoneNum', phoneNum);
+    //     alert('welcome ' );
+    //     Actions.Authentication();
+    //   } else {
+    //     alert(res.message);
+    //   }
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    // })
+    // .done();
+
+
+  //   fetch('http://localhost:3000/users', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       phoneNum: this.state.phoneNum,
+  //     })
+  //   })
+  //   .then((response) => response.json())
+  //   .then((responseJson) => {
+  //     if (responseJson.success === true) {
+  //       var phoneNum = responseJson.message;
+  //       //AsyncStorage.setItem('phoneNum', phoneNum);
+  //       alert(phoneNum);
+  //       //Actions.Authentication();
+  //     } else {
+  //       alert(responseJson.message);
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   })
+  }
+  
+
   render() {
 		return(
 			<View style = {styles.container}>
@@ -25,9 +90,11 @@ export default class SignInForm extends React.Component {
           placeholder="شماره تلفن"
           keyboardType='numeric'
           underlineColorAndroid={'transparent'}
+          onChangeText = {(phoneNum) => this.setState({phoneNum})}
+          value={this.state.phoneNum}
         />
         <TouchableOpacity  
-          onPress={ this.goHomePage } 
+          onPress={ this.login } 
           style={styles.button}>
             <Text style={styles.buttonText}>ورود</Text>
         </TouchableOpacity>
@@ -102,3 +169,27 @@ _callGoogle() {
 </GoogleSigninButton> 
 
 */
+
+
+    // fetch('http://localhost:3000/users', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json',
+    //   },
+    //     body: JSON.stringify({
+    //       phoneNum: this.state.phoneNum,
+    //     })
+    //   })
+    // .then((response) => response.json())
+    // .then((res) => {
+    //   if (res.success === true) {
+    //     var phoneNum = res.message;
+    //     AsyncStorage.setItem('phoneNum', phoneNum);
+    //     alert('welcome ' );
+    //     Actions.Authentication();
+    //   } else {
+    //     //alert(res.message);
+    //   }
+    // })
+    // .done()
